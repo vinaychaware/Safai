@@ -1,0 +1,174 @@
+.learning-path {
+  padding: 2rem;
+}
+
+.lesson-bubble {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.lesson-bubble:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.progress-ring {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.exercise-progress {
+  background: var(--gray-100);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar .progress {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.exercise-counter {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.exercise-content {
+  padding: 2rem;
+}
+
+.exercise-question {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.drag-drop-exercise {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.items-to-sort {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.draggable-item {
+  padding: 1rem;
+  background: white;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  cursor: move;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.draggable-item:hover {
+  background: var(--primary-light);
+}
+
+.waste-bins {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.waste-bin {
+  padding: 1rem;
+  background: var(--gray-100);
+  border: 2px dashed var(--gray-300);
+  border-radius: 8px;
+  text-align: center;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.waste-bin i {
+  font-size: 2rem;
+  color: var(--gray-500);
+}
+
+.waste-bin.drag-over {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.multiple-choice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border: 2px solid var(--gray-300);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.option.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.option-marker {
+  width: 32px;
+  height: 32px;
+  background: var(--gray-200);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.exercise-actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Animation classes */
+.correct {
+  border-color: var(--success) !important;
+  background: var(--success-light) !important;
+}
+
+.incorrect {
+  border-color: var(--error) !important;
+  background: var(--error-light) !important;
+}
