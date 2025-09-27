@@ -924,11 +924,26 @@ body {
   .mobile-toggle {
     display: block !important;
   }
+  
+  .dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .card-header .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 900px) {
   .dashboard-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
   }
   
@@ -942,6 +957,46 @@ body {
   
   .nav-container {
     padding: 0 1rem;
+  }
+  
+  .modal {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+  
+  .modal-header,
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table {
+    min-width: 600px;
+  }
+  
+  .stat-card {
+    padding: 1.5rem;
+  }
+  
+  .stat-value {
+    font-size: 2.2rem;
+  }
+  
+  .nav-user {
+    gap: 0.5rem;
+  }
+  
+  #userInfo {
+    display: none;
   }
 }
 
@@ -986,6 +1041,7 @@ body {
   
   .table {
     font-size: 0.8rem;
+    min-width: 500px;
   }
   
   .table th,
@@ -999,6 +1055,198 @@ body {
   
   .stat-value {
     font-size: 2rem;
+  }
+  
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .btn {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .form-control {
+    padding: 12px 16px;
+  }
+  
+  .modal-overlay {
+    padding: 1rem;
+  }
+  
+  .modal {
+    margin: 0;
+    max-width: 100%;
+    max-height: calc(100vh - 2rem);
+  }
+  
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.25rem;
+  }
+  
+  .notification {
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .notification-title {
+    font-size: 0.9rem;
+  }
+  
+  .notification-message {
+    font-size: 0.8rem;
+  }
+  
+  .nav-brand {
+    font-size: 1.1rem;
+  }
+  
+  .nav-brand span {
+    display: none;
+  }
+  
+  .sidebar {
+    width: 100%;
+  }
+  
+  .nav-link {
+    padding: 12px 16px;
+  }
+  
+  .nav-link span {
+    font-size: 0.9rem;
+  }
+}
+/* Additional responsive utilities */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1.5rem 1rem !important;
+    margin: 0.5rem;
+  }
+  
+  .login-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .stat-card {
+    padding: 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.75rem;
+  }
+  
+  .card-header,
+  .card-body {
+    padding: 1rem !important;
+  }
+  
+  .btn {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+  
+  .form-control {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+  
+  .badge {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+  
+  .nav-header {
+    height: 60px;
+  }
+  
+  .main-content {
+    margin-top: 60px;
+  }
+  
+  .sidebar {
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+  
+  .notifications-container {
+    top: 70px;
+  }
+}
+
+/* Landscape phone orientation */
+@media (max-width: 900px) and (orientation: landscape) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    padding: 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+/* Tablet specific adjustments */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .modal {
+    max-width: 90vw;
+  }
+  
+  .table {
+    font-size: 0.85rem;
+  }
+}
+
+/* Large tablet and small desktop */
+@media (min-width: 1025px) and (max-width: 1199px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 

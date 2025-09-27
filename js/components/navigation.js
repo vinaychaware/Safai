@@ -34,6 +34,7 @@ class Navigation {
     mobileToggle.className = 'mobile-toggle btn btn-ghost';
     mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
     mobileToggle.style.display = 'none';
+    mobileToggle.setAttribute('aria-label', 'Toggle navigation menu');
     
     // Insert before user info
     navContainer.insertBefore(mobileToggle, navContainer.lastElementChild);
@@ -41,26 +42,47 @@ class Navigation {
     // Toggle sidebar on mobile
     mobileToggle.addEventListener('click', () => {
       this.sidebar.classList.toggle('open');
+      const isOpen = this.sidebar.classList.contains('open');
+      mobileToggle.setAttribute('aria-expanded', isOpen);
+      mobileToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
     });
 
     // Show mobile toggle on small screens
-    const mediaQuery = window.matchMedia('(max-width: 1024px)');
+    const mediaQuery = window.matchMedia('(max-width: 1200px)');
     const handleMediaQuery = (e) => {
       mobileToggle.style.display = e.matches ? 'block' : 'none';
       if (!e.matches) {
         this.sidebar.classList.remove('open');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
       }
     };
 
-    mediaQuery.addListener(handleMediaQuery);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleMediaQuery);
+    } else {
+      mediaQuery.addListener(handleMediaQuery);
+    }
     handleMediaQuery(mediaQuery);
 
     // Close sidebar when clicking outside on mobile
     document.addEventListener('click', (e) => {
-      if (window.innerWidth <= 1024) {
+      if (window.innerWidth <= 1200) {
         if (!this.sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
           this.sidebar.classList.remove('open');
+          mobileToggle.setAttribute('aria-expanded', 'false');
+          mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
         }
+      }
+    });
+    
+    // Close sidebar on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.sidebar.classList.contains('open')) {
+        this.sidebar.classList.remove('open');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        mobileToggle.focus();
       }
     });
   }

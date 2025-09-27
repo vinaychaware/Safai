@@ -47,6 +47,17 @@ class Modal {
     } else {
       this.modal.style.maxWidth = '';
     }
+    
+    // Responsive modal sizing
+    if (window.innerWidth <= 600) {
+      this.modal.style.maxWidth = '100%';
+      this.modal.style.margin = '0';
+      this.modal.style.borderRadius = '12px 12px 0 0';
+      this.modal.style.maxHeight = '90vh';
+    } else if (window.innerWidth <= 900) {
+      this.modal.style.maxWidth = '90vw';
+      this.modal.style.margin = '1rem';
+    }
 
     this.overlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -61,6 +72,12 @@ class Modal {
   hide() {
     this.overlay.classList.add('hidden');
     document.body.style.overflow = '';
+    
+    // Reset modal styles
+    this.modal.style.maxWidth = '';
+    this.modal.style.margin = '';
+    this.modal.style.borderRadius = '';
+    this.modal.style.maxHeight = '';
   }
 
   showComplaintForm(complaint = null) {
