@@ -30,48 +30,56 @@ class Navigation {
   setupMobileToggle() {
     // Add mobile menu button
     const navContainer = document.querySelector('.nav-container');
+    if (!navContainer) return;
+    
     const mobileToggle = document.createElement('button');
     mobileToggle.className = 'mobile-toggle btn btn-ghost';
     mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-    mobileToggle.style.display = 'none';
     mobileToggle.setAttribute('aria-label', 'Toggle navigation menu');
+    mobileToggle.setAttribute('aria-expanded', 'false');
     
     // Insert before user info
     navContainer.insertBefore(mobileToggle, navContainer.lastElementChild);
 
     // Toggle sidebar on mobile
     mobileToggle.addEventListener('click', () => {
+      console.log('Mobile toggle clicked'); // Debug log
       this.sidebar.classList.toggle('open');
       const isOpen = this.sidebar.classList.contains('open');
       mobileToggle.setAttribute('aria-expanded', isOpen);
       mobileToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+      
+      // Add/remove body scroll lock
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
     });
 
     // Show mobile toggle on small screens
-    const mediaQuery = window.matchMedia('(max-width: 1200px)');
+    const mediaQuery = window.matchMedia('(max-width: 1199px)');
     const handleMediaQuery = (e) => {
       mobileToggle.style.display = e.matches ? 'block' : 'none';
       if (!e.matches) {
         this.sidebar.classList.remove('open');
         mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        document.body.style.overflow = '';
       }
     };
 
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleMediaQuery);
-    } else {
-      mediaQuery.addListener(handleMediaQuery);
-    }
+    mediaQuery.addEventListener('change', handleMediaQuery);
     handleMediaQuery(mediaQuery);
 
     // Close sidebar when clicking outside on mobile
     document.addEventListener('click', (e) => {
-      if (window.innerWidth <= 1200) {
+      if (window.innerWidth <= 1199) {
         if (!this.sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
           this.sidebar.classList.remove('open');
           mobileToggle.setAttribute('aria-expanded', 'false');
           mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+          document.body.style.overflow = '';
         }
       }
     });
@@ -82,6 +90,7 @@ class Navigation {
         this.sidebar.classList.remove('open');
         mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        document.body.style.overflow = '';
         mobileToggle.focus();
       }
     });
@@ -186,8 +195,16 @@ class Navigation {
     });
 
     // Close mobile sidebar
-    if (window.innerWidth <= 1024) {
+    if (window.innerWidth <= 1199) {
       this.sidebar.classList.remove('open');
+      document.body.style.overflow = '';
+      
+      // Update mobile toggle button
+      const mobileToggle = document.querySelector('.mobile-toggle');
+      if (mobileToggle) {
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+      }
     }
 
     // Load the appropriate content

@@ -325,6 +325,12 @@ body {
   font-weight: 700;
   font-size: 1.25rem;
   color: var(--gray-900);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.brand-text {
+  transition: all 0.3s ease;
 }
 
 .nav-user {
@@ -351,6 +357,7 @@ body {
   overflow-y: auto;
   z-index: 100;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
 }
 
 .sidebar-nav {
@@ -902,27 +909,55 @@ body {
 /* Mobile Toggle Button */
 .mobile-toggle {
   display: none;
+  background: none;
+  border: none;
+  color: var(--gray-700);
+  font-size: 1.25rem;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-toggle:hover {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.mobile-toggle:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1199px) {
   .main-content {
     margin-left: 0;
     padding: 2rem;
   }
   
   .sidebar {
-    width: 280px;
+    width: var(--sidebar-width);
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
   }
   
   .sidebar.open {
     transform: translateX(0);
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
   }
   
   .mobile-toggle {
     display: block !important;
+  }
+  
+  .nav-brand span {
+    display: inline !important;
+  }
+  
+  .brand-text {
+    display: inline !important;
   }
   
   .dashboard-stats {
@@ -1001,6 +1036,26 @@ body {
 }
 
 @media (max-width: 600px) {
+  /* Fix logo and brand display */
+  .nav-brand {
+    gap: 0.5rem !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .nav-brand i {
+    font-size: 1.25rem !important;
+  }
+  
+  .nav-brand span {
+    display: inline !important;
+    font-size: 1rem !important;
+  }
+  
+  .brand-text {
+    display: inline !important;
+    font-size: 1rem !important;
+  }
+  
   .login-container {
     padding: 2rem 1.5rem !important;
     border-radius: 16px !important;
@@ -1114,11 +1169,25 @@ body {
   }
   
   .nav-brand span {
-    display: none;
+    display: none !important;
+  }
+  
+  .brand-text {
+    display: none !important;
+  }
+  
+  .nav-brand {
+    gap: 0.5rem !important;
+    font-size: 1rem !important;
+  }
+  
+  .nav-brand i {
+    font-size: 1.1rem !important;
   }
   
   .sidebar {
-    width: 100%;
+    width: 100% !important;
+    max-width: 320px;
   }
   
   .nav-link {
@@ -1128,9 +1197,28 @@ body {
   .nav-link span {
     font-size: 0.9rem;
   }
+  
+  .mobile-toggle {
+    font-size: 1.1rem;
+    padding: 6px;
+  }
 }
 /* Additional responsive utilities */
 @media (max-width: 480px) {
+  /* Ensure proper logo display on very small screens */
+  .nav-brand {
+    gap: 0.25rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .nav-brand i {
+    font-size: 1rem !important;
+  }
+  
+  .nav-container {
+    padding: 0 0.75rem !important;
+  }
+  
   .login-container {
     padding: 1.5rem 1rem !important;
     margin: 0.5rem;
@@ -1189,6 +1277,8 @@ body {
   .sidebar {
     top: 60px;
     height: calc(100vh - 60px);
+    width: 100% !important;
+    max-width: 300px;
   }
   
   .notifications-container {
