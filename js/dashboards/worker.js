@@ -2,9 +2,6 @@
 class WorkerDashboard {
   constructor() {
     this.currentSection = 'dashboard';
-    this.isOnDuty = false;
-    this.currentTasks = [];
-    this.locationTracking = false;
   }
 
   loadSection(section) {
@@ -37,72 +34,14 @@ class WorkerDashboard {
     this.bindEvents();
   }
 
-  getTrainingData() {
-    return {
-      units: [
-        {
-          title: "Unit 1: Safety First",
-          lessons: [
-            { icon: "fas fa-hard-hat", status: "completed", type: "sorting", title: "Personal Protective Equipment" },
-            { icon: "fas fa-hand-sparkles", status: "completed", type: "multiple-choice", title: "Hygiene & Sanitation" },
-            { icon: "fas fa-truck", status: "current", type: "drag-drop", title: "Vehicle Safety" },
-            { icon: "fas fa-exclamation-triangle", status: "locked", type: "matching", title: "Emergency Procedures" }
-          ]
-        },
-        {
-          title: "Unit 2: Waste Collection",
-          lessons: [
-            { icon: "fas fa-dumpster", status: "locked", type: "sorting", title: "Waste Types & Handling" },
-            { icon: "fas fa-weight", status: "locked", type: "multiple-choice", title: "Load Management" },
-            { icon: "fas fa-map-marked-alt", status: "locked", type: "drag-drop", title: "Route Optimization" },
-            { icon: "fas fa-clock", status: "locked", type: "quiz", title: "Time Management" }
-          ]
-        },
-        {
-          title: "Unit 3: Professional Skills",
-          lessons: [
-            { icon: "fas fa-comments", status: "locked", type: "sorting", title: "Citizen Communication" },
-            { icon: "fas fa-mobile-alt", status: "locked", type: "multiple-choice", title: "App Usage" },
-            { icon: "fas fa-chart-line", status: "locked", type: "matching", title: "Performance Metrics" },
-            { icon: "fas fa-award", status: "locked", type: "final-quiz", title: "Final Assessment" }
-          ]
-        }
-      ]
-    };
-  }
-
-  getLessonBackground(status) {
-    switch (status) {
-      case 'completed': return '#4CAF50';
-      case 'available': return '#2196F3';
-      case 'locked': return '#9E9E9E';
-      case 'current': return '#FF9800';
-      default: return '#9E9E9E';
-    }
-  }
-
   renderDashboard() {
     const user = authSystem.getCurrentUser();
-    const todaysTasks = 5;
-    const completedTasks = 3;
-    const pendingTasks = todaysTasks - completedTasks;
-
+    const trainingStats = window.TrainingSystem.getTrainingStats(user.id);
+    
     return `
       <div class="dashboard-header">
         <h1 class="dashboard-title">Worker Dashboard</h1>
-        <p class="dashboard-subtitle">Welcome back, ${user.name}!</p>
-        <div style="display: flex; gap: 1rem;">
-          <button class="btn ${this.isOnDuty ? 'btn-error' : 'btn-success'}" onclick="window.WorkerDashboard.toggleDutyStatus()">
-            <i class="fas fa-${this.isOnDuty ? 'stop' : 'play'}"></i>
-            ${this.isOnDuty ? 'End Shift' : 'Start Shift'}
-          </button>
-          ${this.isOnDuty ? `
-            <button class="btn btn-secondary" onclick="window.WorkerDashboard.toggleLocationTracking()">
-              <i class="fas fa-map-marker-alt"></i>
-              ${this.locationTracking ? 'Stop' : 'Start'} Tracking
-            </button>
-          ` : ''}
-        </div>
+        <p class="dashboard-subtitle">Welcome back, ${user.name}! Ready for today's tasks</p>
       </div>
 
       <div class="dashboard-stats">
@@ -113,52 +52,52 @@ class WorkerDashboard {
               <i class="fas fa-clipboard-list"></i>
             </div>
           </div>
-          <div class="stat-value">${todaysTasks}</div>
-          <div class="stat-change ${pendingTasks === 0 ? 'positive' : ''}">
-            <i class="fas fa-${pendingTasks === 0 ? 'check' : 'clock'}"></i>
-            ${pendingTasks === 0 ? 'All completed!' : `${pendingTasks} pending`}
+          <div class="stat-value">8</div>
+          <div class="stat-change positive">
+            <i class="fas fa-check"></i>
+            5 completed
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">
-            <span class="stat-title">Completed Tasks</span>
+            <span class="stat-title">Route Progress</span>
             <div class="stat-icon success">
-              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-route"></i>
             </div>
           </div>
-          <div class="stat-value">${completedTasks}</div>
+          <div class="stat-value">65%</div>
           <div class="stat-change positive">
             <i class="fas fa-arrow-up"></i>
-            Great progress!
+            On schedule
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">
-            <span class="stat-title">Work Hours Today</span>
-            <div class="stat-icon secondary">
-              <i class="fas fa-clock"></i>
+            <span class="stat-title">Training Level</span>
+            <div class="stat-icon warning">
+              <i class="fas fa-graduation-cap"></i>
             </div>
           </div>
-          <div class="stat-value">${this.isOnDuty ? '4.5h' : '0h'}</div>
-          <div class="stat-change ${this.isOnDuty ? 'positive' : ''}">
-            <i class="fas fa-${this.isOnDuty ? 'play' : 'pause'}"></i>
-            ${this.isOnDuty ? 'On duty' : 'Off duty'}
+          <div class="stat-value">${trainingStats.level}</div>
+          <div class="stat-change positive">
+            <i class="fas fa-star"></i>
+            ${trainingStats.xp} XP
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">
-            <span class="stat-title">Performance Rating</span>
-            <div class="stat-icon warning">
-              <i class="fas fa-star"></i>
+            <span class="stat-title">Performance</span>
+            <div class="stat-icon secondary">
+              <i class="fas fa-chart-line"></i>
             </div>
           </div>
           <div class="stat-value">4.8</div>
           <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i>
-            Excellent work!
+            <i class="fas fa-star"></i>
+            Excellent rating
           </div>
         </div>
       </div>
@@ -169,11 +108,11 @@ class WorkerDashboard {
             <h3 class="card-title">Current Tasks</h3>
             <button class="btn btn-primary" onclick="navigation.navigateTo('my-tasks')">
               <i class="fas fa-eye"></i>
-              View All
+              View All Tasks
             </button>
           </div>
           <div class="card-body">
-            ${this.renderTaskList(true)}
+            ${this.renderCurrentTasks()}
           </div>
         </div>
 
@@ -183,21 +122,21 @@ class WorkerDashboard {
           </div>
           <div class="card-body">
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-              <button class="btn btn-primary" onclick="window.WorkerDashboard.startFacialRecognition()">
-                <i class="fas fa-camera"></i>
-                Facial Recognition Login
-              </button>
-              <button class="btn btn-secondary" onclick="navigation.navigateTo('attendance')">
+              <button class="btn btn-success" onclick="window.WorkerDashboard.markAttendance()">
                 <i class="fas fa-calendar-check"></i>
                 Mark Attendance
               </button>
-              <button class="btn btn-info" onclick="navigation.navigateTo('location')">
+              <button class="btn btn-secondary" onclick="navigation.navigateTo('location')">
                 <i class="fas fa-map-marker-alt"></i>
                 Update Location
               </button>
-              <button class="btn btn-success" onclick="window.WorkerDashboard.reportEmergency()">
+              <button class="btn btn-info" onclick="navigation.navigateTo('training')">
+                <i class="fas fa-graduation-cap"></i>
+                Training Modules
+              </button>
+              <button class="btn btn-warning" onclick="window.WorkerDashboard.reportIssue()">
                 <i class="fas fa-exclamation-triangle"></i>
-                Report Emergency
+                Report Issue
               </button>
             </div>
           </div>
@@ -213,11 +152,27 @@ class WorkerDashboard {
             <div class="map-container" style="height: 300px;">
               <div class="map-placeholder">
                 <i class="fas fa-route" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
-                <p>Your assigned route for today</p>
-                <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem;">
-                  <span class="badge badge-info">5 Stops</span>
-                  <span class="badge badge-success">3 Completed</span>
-                  <span class="badge badge-warning">2 Remaining</span>
+                <h3 style="margin-bottom: 1rem;">Route Map</h3>
+                <p style="color: var(--gray-600); margin-bottom: 2rem;">
+                  Your assigned collection route for today
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; max-width: 500px; margin: 0 auto;">
+                  <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">Zone A</div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600);">Assigned Zone</div>
+                  </div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">12</div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600);">Stops Total</div>
+                  </div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning);">8</div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600);">Completed</div>
+                  </div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--secondary);">4</div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600);">Remaining</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -227,165 +182,39 @@ class WorkerDashboard {
     `;
   }
 
-  renderMyTasks() {
+  renderCurrentTasks() {
     const tasks = [
-      {
-        id: 'T001',
-        type: 'complaint',
-        title: 'Clean overflowing bin at Main Street',
-        location: 'Main Street, Near Bus Stop',
-        priority: 'high',
-        status: 'assigned',
-        estimatedTime: '30 min',
-        distance: '2.3 km',
-        complainantRating: null
-      },
-      {
-        id: 'T002',
-        type: 'routine',
-        title: 'Garbage collection - Route A1',
-        location: 'Green Valley Apartments',
-        priority: 'medium',
-        status: 'completed',
-        estimatedTime: '45 min',
-        distance: '1.8 km',
-        complainantRating: 4.5
-      },
-      {
-        id: 'T003',
-        type: 'complaint',
-        title: 'Remove illegal dumping',
-        location: 'Park Avenue',
-        priority: 'high',
-        status: 'in_progress',
-        estimatedTime: '60 min',
-        distance: '3.1 km',
-        complainantRating: null
-      }
+      { id: 'T001', location: 'Main Street Market', type: 'Collection', status: 'in_progress', priority: 'high', time: '10:30 AM' },
+      { id: 'T002', location: 'Green Valley Apartments', type: 'Collection', status: 'pending', priority: 'medium', time: '11:00 AM' },
+      { id: 'T003', location: 'School Area', type: 'Maintenance', status: 'pending', priority: 'low', time: '2:00 PM' }
     ];
 
     return `
-      <div class="dashboard-header">
-        <h1 class="dashboard-title">My Tasks</h1>
-        <p class="dashboard-subtitle">Manage your assigned tasks and routes</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Task List</h3>
-          <div style="display: flex; gap: 1rem;">
-            <select class="form-control" style="width: auto;" id="taskStatusFilter">
-              <option value="">All Status</option>
-              <option value="assigned">Assigned</option>
-              <option value="in_progress">In Progress</option>
-              <option value="completed">Completed</option>
-            </select>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="task-grid" style="display: grid; gap: 1.5rem;">
-            ${tasks.map(task => `
-              <div class="task-card" style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 1.5rem; ${task.priority === 'high' ? 'border-left: 4px solid var(--error);' : task.priority === 'medium' ? 'border-left: 4px solid var(--warning);' : 'border-left: 4px solid var(--info);'}">
-                <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
-                  <div style="flex: 1;">
-                    <h4 style="margin-bottom: 0.5rem;">${task.title}</h4>
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--gray-600);">
-                      <div style="display: flex; align-items: center; gap: 0.25rem;">
-                        <i class="fas fa-map-marker-alt"></i>
-                        ${task.location}
-                      </div>
-                      <div style="display: flex; align-items: center; gap: 0.25rem;">
-                        <i class="fas fa-route"></i>
-                        ${task.distance}
-                      </div>
-                      <div style="display: flex; align-items: center; gap: 0.25rem;">
-                        <i class="fas fa-clock"></i>
-                        ${task.estimatedTime}
-                      </div>
-                    </div>
-                  </div>
-                  <div style="display: flex; flex-direction: column; align-items: end; gap: 0.5rem;">
-                    ${Utils.getStatusBadge(task.status)}
-                    ${Utils.getPriorityBadge(task.priority)}
-                  </div>
-                </div>
-                
-                <div style="display: flex; justify-content: between; align-items: center;">
-                  <div style="display: flex; gap: 0.5rem;">
-                    ${task.status === 'assigned' ? `
-                      <button class="btn btn-primary" onclick="window.WorkerDashboard.startTask('${task.id}')">
-                        <i class="fas fa-play"></i>
-                        Start
-                      </button>
-                      <button class="btn btn-secondary" onclick="window.WorkerDashboard.viewTaskDetails('${task.id}')">
-                        <i class="fas fa-eye"></i>
-                        Details
-                      </button>
-                    ` : task.status === 'in_progress' ? `
-                      <button class="btn btn-success" onclick="window.WorkerDashboard.completeTask('${task.id}')">
-                        <i class="fas fa-check"></i>
-                        Complete
-                      </button>
-                      <button class="btn btn-warning" onclick="window.WorkerDashboard.reportIssue('${task.id}')">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Report Issue
-                      </button>
-                    ` : `
-                      <button class="btn btn-info" onclick="window.WorkerDashboard.viewTaskDetails('${task.id}')">
-                        <i class="fas fa-eye"></i>
-                        View Details
-                      </button>
-                    `}
-                  </div>
-                  
-                  ${task.complainantRating ? `
-                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--warning);">
-                      <i class="fas fa-star"></i>
-                      <span style="font-weight: 600;">${task.complainantRating}</span>
-                    </div>
-                  ` : ''}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  renderTaskList(summary = false) {
-    const tasks = [
-      { id: 'T001', title: 'Clean overflowing bin', status: 'assigned', priority: 'high' },
-      { id: 'T002', title: 'Garbage collection Route A1', status: 'completed', priority: 'medium' },
-      { id: 'T003', title: 'Remove illegal dumping', status: 'in_progress', priority: 'high' }
-    ];
-
-    const displayTasks = summary ? tasks.slice(0, 3) : tasks;
-
-    return `
-      <div class="task-list">
-        ${displayTasks.map(task => `
+      <div class="tasks-list">
+        ${tasks.map(task => `
           <div class="task-item" style="display: flex; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--gray-200);">
             <div style="flex: 1;">
-              <div style="font-weight: 600; margin-bottom: 0.25rem;">${task.title}</div>
-              <div style="display: flex; gap: 1rem;">
+              <div style="font-weight: 600; margin-bottom: 0.25rem;">${task.location}</div>
+              <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <span class="badge badge-info">${task.type}</span>
                 ${Utils.getStatusBadge(task.status)}
                 ${Utils.getPriorityBadge(task.priority)}
+                <span style="font-size: 0.875rem; color: var(--gray-500);">${task.time}</span>
               </div>
             </div>
             <div style="display: flex; gap: 0.5rem;">
-              <button class="btn btn-ghost" onclick="window.WorkerDashboard.viewTaskDetails('${task.id}')" title="View Details">
+              ${task.status === 'in_progress' ? `
+                <button class="btn btn-success" onclick="window.WorkerDashboard.completeTask('${task.id}')" title="Mark Complete">
+                  <i class="fas fa-check"></i>
+                </button>
+              ` : task.status === 'pending' ? `
+                <button class="btn btn-primary" onclick="window.WorkerDashboard.startTask('${task.id}')" title="Start Task">
+                  <i class="fas fa-play"></i>
+                </button>
+              ` : ''}
+              <button class="btn btn-ghost" onclick="window.WorkerDashboard.viewTask('${task.id}')" title="View Details">
                 <i class="fas fa-eye"></i>
               </button>
-              ${task.status === 'assigned' ? 
-                `<button class="btn btn-ghost" onclick="window.WorkerDashboard.startTask('${task.id}')" title="Start Task">
-                  <i class="fas fa-play"></i>
-                </button>` : 
-                task.status === 'in_progress' ?
-                `<button class="btn btn-ghost" onclick="window.WorkerDashboard.completeTask('${task.id}')" title="Complete Task">
-                  <i class="fas fa-check"></i>
-                </button>` : ''
-              }
             </div>
           </div>
         `).join('')}
@@ -393,14 +222,137 @@ class WorkerDashboard {
     `;
   }
 
-  renderAttendance() {
-    const attendanceRecords = [
-      { date: '2024-01-15', checkIn: '08:00 AM', checkOut: '05:00 PM', hours: '9h', status: 'present' },
-      { date: '2024-01-14', checkIn: '08:15 AM', checkOut: '05:10 PM', hours: '8h 55m', status: 'present' },
-      { date: '2024-01-13', checkIn: '08:30 AM', checkOut: '04:45 PM', hours: '8h 15m', status: 'present' },
-      { date: '2024-01-12', checkIn: '-', checkOut: '-', hours: '0h', status: 'absent' }
+  renderMyTasks() {
+    return `
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">My Tasks</h1>
+        <p class="dashboard-subtitle">Manage your assigned tasks and routes</p>
+      </div>
+
+      <div class="dashboard-stats" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Pending Tasks</span>
+            <div class="stat-icon warning">
+              <i class="fas fa-clock"></i>
+            </div>
+          </div>
+          <div class="stat-value">3</div>
+          <div class="stat-change positive">
+            <i class="fas fa-list"></i>
+            Need attention
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">In Progress</span>
+            <div class="stat-icon primary">
+              <i class="fas fa-spinner"></i>
+            </div>
+          </div>
+          <div class="stat-value">1</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-right"></i>
+            Currently working
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Completed Today</span>
+            <div class="stat-icon success">
+              <i class="fas fa-check"></i>
+            </div>
+          </div>
+          <div class="stat-value">5</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            Great progress
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Task List</h3>
+          <div style="display: flex; gap: 1rem;">
+            <select class="form-control" style="width: auto;">
+              <option>All Tasks</option>
+              <option>Pending</option>
+              <option>In Progress</option>
+              <option>Completed</option>
+            </select>
+            <select class="form-control" style="width: auto;">
+              <option>All Types</option>
+              <option>Collection</option>
+              <option>Maintenance</option>
+              <option>Emergency</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Task ID</th>
+                  <th>Location</th>
+                  <th>Type</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Scheduled Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${this.generateTaskRows()}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  generateTaskRows() {
+    const tasks = [
+      { id: 'T001', location: 'Main Street Market', type: 'Collection', priority: 'high', status: 'in_progress', time: '10:30 AM' },
+      { id: 'T002', location: 'Green Valley Apartments', type: 'Collection', priority: 'medium', status: 'pending', time: '11:00 AM' },
+      { id: 'T003', location: 'School Area', type: 'Maintenance', priority: 'low', status: 'pending', time: '2:00 PM' },
+      { id: 'T004', location: 'Central Park', type: 'Collection', priority: 'medium', status: 'completed', time: '9:00 AM' },
+      { id: 'T005', location: 'Industrial Area', type: 'Emergency', priority: 'high', status: 'pending', time: '3:30 PM' }
     ];
 
+    return tasks.map(task => `
+      <tr>
+        <td>${task.id}</td>
+        <td>${task.location}</td>
+        <td><span class="badge badge-info">${task.type}</span></td>
+        <td>${Utils.getPriorityBadge(task.priority)}</td>
+        <td>${Utils.getStatusBadge(task.status)}</td>
+        <td>${task.time}</td>
+        <td>
+          <div style="display: flex; gap: 0.5rem;">
+            ${task.status === 'pending' ? `
+              <button class="btn btn-primary" onclick="window.WorkerDashboard.startTask('${task.id}')" title="Start">
+                <i class="fas fa-play"></i>
+              </button>
+            ` : task.status === 'in_progress' ? `
+              <button class="btn btn-success" onclick="window.WorkerDashboard.completeTask('${task.id}')" title="Complete">
+                <i class="fas fa-check"></i>
+              </button>
+            ` : ''}
+            <button class="btn btn-ghost" onclick="window.WorkerDashboard.viewTask('${task.id}')" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  renderAttendance() {
     return `
       <div class="dashboard-header">
         <h1 class="dashboard-title">Attendance Management</h1>
@@ -410,43 +362,43 @@ class WorkerDashboard {
       <div class="dashboard-stats" style="margin-bottom: 2rem;">
         <div class="stat-card">
           <div class="stat-header">
-            <span class="stat-title">This Week</span>
-            <div class="stat-icon primary">
-              <i class="fas fa-calendar-week"></i>
+            <span class="stat-title">Today's Status</span>
+            <div class="stat-icon success">
+              <i class="fas fa-calendar-check"></i>
             </div>
           </div>
-          <div class="stat-value">4/5</div>
+          <div class="stat-value">Present</div>
           <div class="stat-change positive">
-            <i class="fas fa-check"></i>
-            Days present
+            <i class="fas fa-clock"></i>
+            8:30 AM check-in
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">
-            <span class="stat-title">Total Hours</span>
-            <div class="stat-icon secondary">
+            <span class="stat-title">This Month</span>
+            <div class="stat-icon primary">
+              <i class="fas fa-calendar"></i>
+            </div>
+          </div>
+          <div class="stat-value">22/24</div>
+          <div class="stat-change positive">
+            <i class="fas fa-percentage"></i>
+            92% attendance
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Hours Worked</span>
+            <div class="stat-icon warning">
               <i class="fas fa-clock"></i>
             </div>
           </div>
-          <div class="stat-value">34h</div>
+          <div class="stat-value">176h</div>
           <div class="stat-change positive">
             <i class="fas fa-arrow-up"></i>
-            This week
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Punctuality</span>
-            <div class="stat-icon success">
-              <i class="fas fa-user-check"></i>
-            </div>
-          </div>
-          <div class="stat-value">95%</div>
-          <div class="stat-change positive">
-            <i class="fas fa-trophy"></i>
-            Excellent
+            This month
           </div>
         </div>
       </div>
@@ -454,19 +406,24 @@ class WorkerDashboard {
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Facial Recognition Login</h3>
+            <h3 class="card-title">Today's Attendance</h3>
           </div>
           <div class="card-body">
-            <div style="text-align: center;">
-              <div id="faceRecognitionArea" style="width: 200px; height: 200px; border: 2px dashed var(--gray-300); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; background: var(--gray-50);">
-                <div style="text-align: center; color: var(--gray-500);">
-                  <i class="fas fa-camera" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                  <p>Click to start facial recognition</p>
-                </div>
+            <div class="attendance-actions" style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="attendance-status" style="text-align: center; padding: 2rem; background: var(--success); color: white; border-radius: 12px; margin-bottom: 2rem;">
+                <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <h3>Checked In</h3>
+                <p style="margin: 0; opacity: 0.9;">Started work at 8:30 AM</p>
               </div>
-              <button class="btn btn-primary" onclick="window.WorkerDashboard.startFacialRecognition()">
-                <i class="fas fa-play"></i>
-                Start Recognition
+              
+              <button class="btn btn-primary" onclick="window.WorkerDashboard.markBreak()">
+                <i class="fas fa-coffee"></i>
+                Take Break
+              </button>
+              
+              <button class="btn btn-warning" onclick="window.WorkerDashboard.checkOut()">
+                <i class="fas fa-sign-out-alt"></i>
+                Check Out
               </button>
             </div>
           </div>
@@ -474,30 +431,11 @@ class WorkerDashboard {
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Manual Check-in/out</h3>
+            <h3 class="card-title">Recent Attendance</h3>
           </div>
           <div class="card-body">
-            <div style="text-align: center;">
-              <div style="margin-bottom: 2rem;">
-                <div style="font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
-                  ${new Date().toLocaleTimeString()}
-                </div>
-                <div style="color: var(--gray-600);">${new Date().toDateString()}</div>
-              </div>
-              
-              <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <button class="btn ${this.isOnDuty ? 'btn-error' : 'btn-success'}" onclick="window.WorkerDashboard.toggleDutyStatus()">
-                  <i class="fas fa-${this.isOnDuty ? 'stop-circle' : 'play-circle'}"></i>
-                  ${this.isOnDuty ? 'Check Out' : 'Check In'}
-                </button>
-                
-                ${this.isOnDuty ? `
-                  <div style="padding: 1rem; background: var(--success); color: white; border-radius: 8px;">
-                    <i class="fas fa-clock"></i>
-                    On duty since 8:00 AM
-                  </div>
-                ` : ''}
-              </div>
+            <div class="attendance-history">
+              ${this.renderAttendanceHistory()}
             </div>
           </div>
         </div>
@@ -506,36 +444,38 @@ class WorkerDashboard {
       <div style="margin-top: 2rem;">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Attendance History</h3>
+            <h3 class="card-title">Monthly Overview</h3>
           </div>
           <div class="card-body">
-            <div class="table-container">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
-                    <th>Total Hours</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${attendanceRecords.map(record => `
-                    <tr>
-                      <td>${record.date}</td>
-                      <td>${record.checkIn}</td>
-                      <td>${record.checkOut}</td>
-                      <td>${record.hours}</td>
-                      <td>
-                        <span class="badge ${record.status === 'present' ? 'badge-success' : 'badge-error'}">
-                          ${Utils.capitalize(record.status)}
-                        </span>
-                      </td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
+            <div class="calendar-view" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1rem; text-align: center;">
+              <div style="font-weight: 600; color: var(--gray-700);">Mon</div>
+              <div style="font-weight: 600; color: var(--gray-700);">Tue</div>
+              <div style="font-weight: 600; color: var(--gray-700);">Wed</div>
+              <div style="font-weight: 600; color: var(--gray-700);">Thu</div>
+              <div style="font-weight: 600; color: var(--gray-700);">Fri</div>
+              <div style="font-weight: 600; color: var(--gray-700);">Sat</div>
+              <div style="font-weight: 600; color: var(--gray-700);">Sun</div>
+              
+              ${Array.from({length: 31}, (_, i) => {
+                const day = i + 1;
+                const status = Math.random() > 0.1 ? 'present' : 'absent';
+                return `
+                  <div style="padding: 0.5rem; border-radius: 8px; background: ${status === 'present' ? 'var(--success)' : 'var(--error)'}; color: white; font-weight: 600;">
+                    ${day}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 16px; height: 16px; background: var(--success); border-radius: 4px;"></div>
+                <span>Present</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="width: 16px; height: 16px; background: var(--error); border-radius: 4px;"></div>
+                <span>Absent</span>
+              </div>
             </div>
           </div>
         </div>
@@ -543,97 +483,106 @@ class WorkerDashboard {
     `;
   }
 
+  renderAttendanceHistory() {
+    const history = [
+      { date: '2024-01-15', checkIn: '8:30 AM', checkOut: '5:00 PM', hours: '8.5h', status: 'present' },
+      { date: '2024-01-14', checkIn: '8:45 AM', checkOut: '5:15 PM', hours: '8.5h', status: 'present' },
+      { date: '2024-01-13', checkIn: '9:00 AM', checkOut: '5:30 PM', hours: '8.5h', status: 'present' },
+      { date: '2024-01-12', checkIn: '-', checkOut: '-', hours: '0h', status: 'absent' }
+    ];
+
+    return history.map(record => `
+      <div class="attendance-record" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--gray-200);">
+        <div>
+          <div style="font-weight: 600; margin-bottom: 0.25rem;">${record.date}</div>
+          <div style="font-size: 0.875rem; color: var(--gray-600);">
+            ${record.checkIn} - ${record.checkOut}
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-weight: 600; margin-bottom: 0.25rem;">${record.hours}</div>
+          <span class="badge ${record.status === 'present' ? 'badge-success' : 'badge-error'}">
+            ${record.status === 'present' ? 'Present' : 'Absent'}
+          </span>
+        </div>
+      </div>
+    `).join('');
+  }
+
   renderLocation() {
     return `
       <div class="dashboard-header">
-        <h1 class="dashboard-title">Location & Vehicle Tracking</h1>
-        <p class="dashboard-subtitle">Manage your location sharing and vehicle status</p>
+        <h1 class="dashboard-title">Location Tracking</h1>
+        <p class="dashboard-subtitle">Share your location for efficient task coordination</p>
       </div>
 
-      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Current Location</h3>
-            <div style="display: flex; gap: 1rem;">
-              <button class="btn ${this.locationTracking ? 'btn-error' : 'btn-success'}" onclick="window.WorkerDashboard.toggleLocationTracking()">
-                <i class="fas fa-${this.locationTracking ? 'stop' : 'play'}"></i>
-                ${this.locationTracking ? 'Stop Tracking' : 'Start Tracking'}
-              </button>
-              <button class="btn btn-secondary" onclick="window.WorkerDashboard.updateLocation()">
-                <i class="fas fa-sync"></i>
-                Update Location
-              </button>
-            </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Current Location</h3>
+          <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" onclick="window.WorkerDashboard.refreshLocation()">
+              <i class="fas fa-sync"></i>
+              Refresh
+            </button>
+            <button class="btn btn-primary" onclick="window.WorkerDashboard.shareLocation()">
+              <i class="fas fa-share-alt"></i>
+              Share Location
+            </button>
           </div>
-          <div class="card-body">
-            <div class="map-container" style="height: 400px;">
-              <div class="map-placeholder">
-                <i class="fas fa-map-marker-alt" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                <h3 style="margin-bottom: 1rem;">Real-time Location Tracking</h3>
-                <p style="color: var(--gray-600); margin-bottom: 2rem;">
-                  ${this.locationTracking ? 
-                    'Your location is being tracked and shared with the system.' : 
-                    'Location tracking is disabled. Enable to share your position.'
-                  }
-                </p>
-                <div style="display: flex; justify-content: center; gap: 1rem;">
-                  <div style="text-align: center;">
-                    <div style="font-weight: 600; color: var(--primary);">28.6139° N</div>
+        </div>
+        <div class="card-body">
+          <div class="map-container" style="height: 400px; margin-bottom: 2rem;">
+            <div class="map-placeholder">
+              <i class="fas fa-map-marker-alt" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
+              <h3 style="margin-bottom: 1rem;">Your Current Location</h3>
+              <p style="color: var(--gray-600); margin-bottom: 2rem;">
+                Real-time location tracking for task coordination
+              </p>
+              <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px; max-width: 400px; margin: 0 auto;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center;">
+                  <div>
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">28.6139°N</div>
                     <div style="font-size: 0.875rem; color: var(--gray-600);">Latitude</div>
                   </div>
-                  <div style="text-align: center;">
-                    <div style="font-weight: 600; color: var(--primary);">77.2090° E</div>
+                  <div>
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">77.2090°E</div>
                     <div style="font-size: 0.875rem; color: var(--gray-600);">Longitude</div>
                   </div>
                 </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-200); text-align: center;">
+                  <div style="font-size: 0.875rem; color: var(--gray-600);">Last Updated</div>
+                  <div style="font-weight: 600;">Just now</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Vehicle Status</h3>
-          </div>
-          <div class="card-body">
-            <div style="margin-bottom: 2rem;">
-              <div style="text-align: center; margin-bottom: 1.5rem;">
-                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 2rem;">
-                  <i class="fas fa-truck"></i>
+          <div class="location-settings">
+            <h4 style="margin-bottom: 1rem;">Location Settings</h4>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                <input type="checkbox" checked>
+                <div>
+                  <div style="font-weight: 600;">Auto-share location during work hours</div>
+                  <div style="font-size: 0.875rem; color: var(--gray-600);">Automatically share your location when on duty</div>
                 </div>
-                <div style="font-weight: 600; margin-bottom: 0.25rem;">Vehicle ID: GC-001</div>
-                <div style="color: var(--gray-600);">Garbage Collection Truck</div>
-              </div>
+              </label>
               
-              <div class="vehicle-stats">
-                <div style="display: flex; justify-content: between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
-                  <span>Status:</span>
-                  <span class="badge badge-success">Active</span>
+              <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                <input type="checkbox" checked>
+                <div>
+                  <div style="font-weight: 600;">Location history</div>
+                  <div style="font-size: 0.875rem; color: var(--gray-600);">Keep track of your work locations for reports</div>
                 </div>
-                <div style="display: flex; justify-content: between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
-                  <span>Fuel Level:</span>
-                  <strong>85%</strong>
+              </label>
+              
+              <label style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                <input type="checkbox">
+                <div>
+                  <div style="font-weight: 600;">Emergency location sharing</div>
+                  <div style="font-size: 0.875rem; color: var(--gray-600);">Share location in case of emergency situations</div>
                 </div>
-                <div style="display: flex; justify-content: between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
-                  <span>Load Capacity:</span>
-                  <strong>60%</strong>
-                </div>
-                <div style="display: flex; justify-content: between;">
-                  <span>Last Service:</span>
-                  <strong>Jan 10, 2024</strong>
-                </div>
-              </div>
-            </div>
-            
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <button class="btn btn-primary" onclick="window.WorkerDashboard.startVehicleTracking()">
-                <i class="fas fa-broadcast-tower"></i>
-                Start Broadcasting
-              </button>
-              <button class="btn btn-warning" onclick="window.WorkerDashboard.reportVehicleIssue()">
-                <i class="fas fa-exclamation-triangle"></i>
-                Report Issue
-              </button>
+              </label>
             </div>
           </div>
         </div>
@@ -645,37 +594,8 @@ class WorkerDashboard {
             <h3 class="card-title">Location History</h3>
           </div>
           <div class="card-body">
-            <div class="table-container">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Location</th>
-                    <th>Activity</th>
-                    <th>Duration</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>10:30 AM</td>
-                    <td>Main Street Market</td>
-                    <td>Garbage Collection</td>
-                    <td>25 min</td>
-                  </tr>
-                  <tr>
-                    <td>09:45 AM</td>
-                    <td>Green Valley Apartments</td>
-                    <td>Complaint Resolution</td>
-                    <td>30 min</td>
-                  </tr>
-                  <tr>
-                    <td>09:15 AM</td>
-                    <td>Central Depot</td>
-                    <td>Vehicle Check</td>
-                    <td>15 min</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="location-history">
+              ${this.renderLocationHistory()}
             </div>
           </div>
         </div>
@@ -683,121 +603,173 @@ class WorkerDashboard {
     `;
   }
 
+  renderLocationHistory() {
+    const history = [
+      { time: '2:30 PM', location: 'Main Street Market', task: 'Collection completed', status: 'completed' },
+      { time: '1:45 PM', location: 'Green Valley Apartments', task: 'Collection in progress', status: 'active' },
+      { time: '12:30 PM', location: 'Central Depot', task: 'Lunch break', status: 'break' },
+      { time: '11:15 AM', location: 'School Area', task: 'Collection completed', status: 'completed' }
+    ];
+
+    return history.map(record => `
+      <div class="location-record" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--gray-200);">
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: ${record.status === 'completed' ? 'var(--success)' : record.status === 'active' ? 'var(--primary)' : 'var(--warning)'}; display: flex; align-items: center; justify-content: center; color: white;">
+          <i class="fas fa-${record.status === 'completed' ? 'check' : record.status === 'active' ? 'spinner' : 'coffee'}"></i>
+        </div>
+        <div style="flex: 1;">
+          <div style="font-weight: 600; margin-bottom: 0.25rem;">${record.location}</div>
+          <div style="font-size: 0.875rem; color: var(--gray-600);">${record.task}</div>
+        </div>
+        <div style="text-align: right; color: var(--gray-500); font-size: 0.875rem;">
+          ${record.time}
+        </div>
+      </div>
+    `).join('');
+  }
+
   renderTraining() {
     const user = authSystem.getCurrentUser();
-    const trainingData = this.getTrainingData();
-    const dailyGoal = user.dailyGoal || 50;
-    const dailyProgress = user.dailyProgress || 30;
-    const streak = user.streak || 5;
-    const lives = user.lives || 3;
-    const performanceScore = user.performanceScore || 85;
+    const trainingStats = window.TrainingSystem.getTrainingStats(user.id);
+    const modules = ENHANCED_TRAINING_MODULES.worker || [];
 
     return `
       <div class="dashboard-header">
-        <h1 class="dashboard-title">Worker Training Program</h1>
-        <p class="dashboard-subtitle">Enhance your skills and earn performance points</p>
+        <h1 class="dashboard-title">Safety & Skills Training</h1>
+        <p class="dashboard-subtitle">Enhance your skills and earn certifications for better performance</p>
       </div>
-      
-      <!-- Game Status Bar -->
-      <div style="background: var(--primary); color: white; padding: 1rem; border-radius: 12px; margin-bottom: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 2rem;">
-            <div>
-              <i class="fas fa-fire" style="color: #FF9801;"></i>
-              <span>${streak} day streak</span>
-            </div>
-            <div>
-              <i class="fas fa-heart" style="color: #FF5252;"></i>
-              <span>${lives} lives</span>
-            </div>
-            <div>
-              <i class="fas fa-star" style="color: #FFD700;"></i>
-              <span>${performanceScore}% efficiency</span>
+
+      <div class="dashboard-stats" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">XP Points</span>
+            <div class="stat-icon warning">
+              <i class="fas fa-star"></i>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 1rem;">
-            <div class="progress-ring">
-              <svg width="40" height="40">
-                <circle class="progress-ring-circle" 
-                  stroke="white" 
-                  stroke-width="3" 
-                  fill="transparent" 
-                  r="16" 
-                  cx="20" 
-                  cy="20"
-                  style="stroke-dasharray: 100; stroke-dashoffset: ${100 - (dailyProgress/dailyGoal * 100)};"
-                />
-              </svg>
-              <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                ${Math.round(dailyProgress/dailyGoal * 100)}%
-              </span>
+          <div class="stat-value">${trainingStats.xp}</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            Level ${trainingStats.level}
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Progress</span>
+            <div class="stat-icon primary">
+              <i class="fas fa-graduation-cap"></i>
             </div>
-            <span>Daily Goal</span>
+          </div>
+          <div class="stat-value">${trainingStats.completionPercentage}%</div>
+          <div class="stat-change positive">
+            <i class="fas fa-check"></i>
+            ${trainingStats.completedModules}/${trainingStats.totalModules} modules
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Streak</span>
+            <div class="stat-icon error">
+              <i class="fas fa-fire"></i>
+            </div>
+          </div>
+          <div class="stat-value">${trainingStats.currentStreak}</div>
+          <div class="stat-change positive">
+            <i class="fas fa-calendar"></i>
+            Days in a row
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Safety Score</span>
+            <div class="stat-icon success">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+          </div>
+          <div class="stat-value">95%</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            Excellent
           </div>
         </div>
       </div>
 
-      <!-- Learning Path -->
-      <div class="learning-path" style="max-width: 800px; margin: 0 auto;">
-        ${trainingData.units.map((unit, unitIndex) => `
-          <div class="unit-section" style="margin-bottom: 3rem;">
-            <h3 style="margin-bottom: 1rem;">${unit.title}</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 1rem; position: relative;">
-              ${unit.lessons.map((lesson, lessonIndex) => `
-                <div class="lesson-bubble ${lesson.status}" 
-                  style="
-                    position: relative;
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 50%;
-                    background: ${this.getLessonBackground(lesson.status)};
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    ${lesson.status === 'locked' ? 'opacity: 0.5;' : ''}
-                  "
-                  onclick="${lesson.status !== 'locked' ? `window.WorkerDashboard.startLesson(${unitIndex}, ${lessonIndex})` : ''}"
-                >
-                  <i class="${lesson.icon}" style="font-size: 1.5rem; color: white;"></i>
-                  ${lesson.status === 'completed' ? 
-                    `<div style="position: absolute; bottom: -5px; right: -5px; background: #4CAF50; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
-                      <i class="fas fa-check" style="color: white; font-size: 0.8rem;"></i>
-                    </div>` 
-                    : ''
-                  }
-                </div>
-                ${lessonIndex < unit.lessons.length - 1 ? 
-                  `<div style="flex: 1; height: 2px; background: var(--gray-300); margin-top: 40px;"></div>` 
-                  : ''
-                }
-              `).join('')}
+      <div class="training-modules">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Training Modules</h3>
+            <div style="display: flex; gap: 1rem;">
+              <button class="btn btn-secondary" onclick="window.WorkerDashboard.showCertificates()">
+                <i class="fas fa-certificate"></i>
+                My Certificates
+              </button>
+              <button class="btn btn-info" onclick="window.WorkerDashboard.showSafetyTips()">
+                <i class="fas fa-lightbulb"></i>
+                Safety Tips
+              </button>
             </div>
           </div>
-        `).join('')}
-      </div>
+          <div class="card-body">
+            <div class="modules-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+              ${modules.map(module => {
+                const isCompleted = window.TrainingSystem.isModuleCompleted(module.id, user.id);
+                return `
+                  <div class="module-card" style="border: 2px solid ${isCompleted ? 'var(--success)' : 'var(--gray-200)'}; border-radius: 16px; padding: 2rem; background: var(--white); position: relative; transition: all 0.3s ease;">
+                    ${isCompleted ? `
+                      <div style="position: absolute; top: 1rem; right: 1rem; background: var(--success); color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-check"></i>
+                      </div>
+                    ` : ''}
+                    
+                    <div class="module-header" style="text-align: center; margin-bottom: 2rem;">
+                      <div style="font-size: 4rem; margin-bottom: 1rem;">${module.icon}</div>
+                      <h4 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--gray-900);">${module.title}</h4>
+                      <p style="color: var(--gray-600); margin-bottom: 1rem;">${module.description}</p>
+                    </div>
 
-      <!-- Performance Insights -->
-      <div class="card" style="margin-top: 2rem;">
-        <div class="card-header">
-          <h3 class="card-title">Performance Insights</h3>
-        </div>
-        <div class="card-body">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-            <div class="stat-card">
-              <div class="stat-title">Safety Score</div>
-              <div class="stat-value">95%</div>
-              <div class="stat-desc positive">+5% this month</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-title">Route Efficiency</div>
-              <div class="stat-value">88%</div>
-              <div class="stat-desc positive">+3% this week</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-title">Citizen Feedback</div>
-              <div class="stat-value">4.8/5</div>
-              <div class="stat-desc">Based on 45 reviews</div>
+                    <div class="module-stats" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                      <div style="text-align: center;">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">${module.exercises.length}</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-600);">Exercises</div>
+                      </div>
+                      <div style="text-align: center;">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--warning);">${module.points}</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-600);">XP Points</div>
+                      </div>
+                      <div style="text-align: center;">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--secondary);">${module.duration}</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-600);">Duration</div>
+                      </div>
+                    </div>
+
+                    <div class="module-objectives" style="margin-bottom: 2rem;">
+                      <h5 style="margin-bottom: 1rem; color: var(--gray-800);">Learning Objectives:</h5>
+                      <ul style="list-style: none; padding: 0; margin: 0;">
+                        ${module.objectives.slice(0, 3).map(objective => `
+                          <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--gray-700);">
+                            <i class="fas fa-check-circle" style="color: var(--success); font-size: 0.75rem;"></i>
+                            ${objective}
+                          </li>
+                        `).join('')}
+                        ${module.objectives.length > 3 ? `
+                          <li style="font-size: 0.875rem; color: var(--gray-500); margin-top: 0.5rem;">
+                            +${module.objectives.length - 3} more objectives...
+                          </li>
+                        ` : ''}
+                      </ul>
+                    </div>
+
+                    <button class="btn ${isCompleted ? 'btn-success' : 'btn-primary'}" 
+                            onclick="window.TrainingSystem.startTrainingModule(${module.id}, '${user.id}')" 
+                            style="width: 100%; padding: 1rem;">
+                      <i class="fas fa-${isCompleted ? 'redo' : 'play'}"></i>
+                      ${isCompleted ? 'Review Module' : 'Start Training'}
+                    </button>
+                  </div>
+                `;
+              }).join('')}
             </div>
           </div>
         </div>
@@ -807,11 +779,12 @@ class WorkerDashboard {
 
   renderProfile() {
     const user = authSystem.getCurrentUser();
+    const trainingStats = window.TrainingSystem.getTrainingStats(user.id);
     
     return `
       <div class="dashboard-header">
-        <h1 class="dashboard-title">Profile Settings</h1>
-        <p class="dashboard-subtitle">Manage your worker profile and preferences</p>
+        <h1 class="dashboard-title">Worker Profile</h1>
+        <p class="dashboard-subtitle">Manage your profile and view performance metrics</p>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
@@ -821,28 +794,33 @@ class WorkerDashboard {
           </div>
           <div class="card-body">
             <div style="text-align: center; margin-bottom: 2rem;">
-              <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 2rem; font-weight: 700;">
+              <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 2.5rem; font-weight: 700;">
                 ${user.name.charAt(0).toUpperCase()}
               </div>
               <h3 style="margin-bottom: 0.5rem;">${user.name}</h3>
-              <p style="color: var(--gray-600);">Field Worker</p>
-            </div>
-            <div class="profile-stats">
-              <div style="display: flex; justify-content: between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
-                <span>Employee ID:</span>
-                <strong>WK-001</strong>
+              <p style="color: var(--gray-600);">Waste Collection Worker</p>
+              <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+                <i class="fas fa-star" style="color: var(--warning);"></i>
+                <span style="font-weight: 600;">Level ${trainingStats.level}</span>
               </div>
-              <div style="display: flex; justify-content: between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
-                <span>Zone Assigned:</span>
+            </div>
+            
+            <div class="profile-stats">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
+                <span>Employee ID:</span>
+                <strong>WRK-001</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
+                <span>Zone Assignment:</span>
                 <strong>Zone A</strong>
               </div>
-              <div style="display: flex; justify-content: between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
                 <span>Performance Rating:</span>
-                <strong style="color: var(--warning);">4.8 ★</strong>
+                <strong style="color: var(--success);">4.8/5.0</strong>
               </div>
-              <div style="display: flex; justify-content: between;">
-                <span>Tasks Completed:</span>
-                <strong>247</strong>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Joined:</span>
+                <strong>${Utils.formatDate(user.joinedAt || new Date())}</strong>
               </div>
             </div>
           </div>
@@ -867,14 +845,25 @@ class WorkerDashboard {
                 <input type="tel" class="form-control" placeholder="Enter phone number">
               </div>
               <div class="form-group" style="margin-bottom: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Zone Assignment</label>
-                <select class="form-control" disabled>
-                  <option>Zone A</option>
-                </select>
-              </div>
-              <div class="form-group" style="margin-bottom: 2rem;">
                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Emergency Contact</label>
                 <input type="tel" class="form-control" placeholder="Emergency contact number">
+              </div>
+              <div class="form-group" style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Notification Preferences</label>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" checked>
+                    <span>Task assignment notifications</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" checked>
+                    <span>Schedule change alerts</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox">
+                    <span>Training reminders</span>
+                  </label>
+                </div>
               </div>
               <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
@@ -886,393 +875,271 @@ class WorkerDashboard {
           </div>
         </div>
       </div>
+
+      <div style="margin-top: 2rem;">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Performance Metrics</h3>
+          </div>
+          <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+              <div class="metric-item" style="text-align: center; padding: 1.5rem; background: var(--gray-50); border-radius: 12px;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">247</div>
+                <div style="color: var(--gray-600);">Tasks Completed</div>
+                <div style="font-size: 0.875rem; color: var(--gray-500);">This month</div>
+              </div>
+              
+              <div class="metric-item" style="text-align: center; padding: 1.5rem; background: var(--gray-50); border-radius: 12px;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">⏱️</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success); margin-bottom: 0.5rem;">95%</div>
+                <div style="color: var(--gray-600);">On-Time Rate</div>
+                <div style="font-size: 0.875rem; color: var(--gray-500);">Last 30 days</div>
+              </div>
+              
+              <div class="metric-item" style="text-align: center; padding: 1.5rem; background: var(--gray-50); border-radius: 12px;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning); margin-bottom: 0.5rem;">0</div>
+                <div style="color: var(--gray-600);">Safety Incidents</div>
+                <div style="font-size: 0.875rem; color: var(--gray-500);">This year</div>
+              </div>
+              
+              <div class="metric-item" style="text-align: center; padding: 1.5rem; background: var(--gray-50); border-radius: 12px;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">⭐</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.5rem;">4.8</div>
+                <div style="color: var(--gray-600);">Average Rating</div>
+                <div style="font-size: 0.875rem; color: var(--gray-500);">From supervisors</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     `;
   }
 
   // Worker-specific methods
-  static async startLesson(unitIndex, lessonIndex) {
-    const user = authSystem.getCurrentUser();
-    const trainingData = window.workerDashboard.getTrainingData();
-    const unit = trainingData.units[unitIndex];
-    const lesson = unit.lessons[lessonIndex];
-    
-    if (lesson.status === 'locked') {
-      notifications.warning('Lesson Locked', 'Complete previous lessons to unlock this one.');
-      return;
-    }
-
-    const exercise = {
-      title: lesson.title,
-      description: lesson.description,
-      questions: lesson.questions.map(q => ({
-        ...q,
-        userAnswer: null
-      })),
-      currentQuestion: 0,
-      lives: user.lives || 3,
-      score: 0
-    };
-
-    // Show exercise modal
-    modal.show('Exercise', `
-      <div class="exercise-container">
-        <div class="exercise-header">
-          <div class="lives">
-            ${Array(exercise.lives).fill(0).map(() => '<i class="fas fa-heart" style="color: #FF5252;"></i>').join('')}
-          </div>
-          <div class="progress-bar">
-            <div class="progress" style="width: ${(exercise.currentQuestion / exercise.questions.length) * 100}%"></div>
-          </div>
-          <div class="score">${exercise.score} points</div>
-        </div>
-        
-        <div class="exercise-content">
-          ${WorkerDashboard.renderQuestion(exercise.questions[exercise.currentQuestion])}
-        </div>
-        
-        <div class="exercise-actions">
-          <button class="btn btn-primary check-answer" style="width: 100%;">
-            Check Answer
-          </button>
-        </div>
-      </div>
-    `);
-
-    // Add event listeners
-    const checkButton = document.querySelector('.check-answer');
-    checkButton.addEventListener('click', () => WorkerDashboard.checkAnswer(exercise));
+  markAttendance() {
+    notifications.success('Attendance Marked', 'You have been marked present for today');
   }
 
-  static renderQuestion(question) {
-    switch (question.type) {
-      case 'multiple-choice':
-        return `
-          <div class="question multiple-choice">
-            <h3 class="question-text">${question.text}</h3>
-            <div class="options">
-              ${question.options.map((option, index) => `
-                <div class="option" data-index="${index}">
-                  <div class="option-content">
-                    ${option.image ? `<img src="${option.image}" alt="${option.text}">` : ''}
-                    <span>${option.text}</span>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      
-      case 'arrange':
-        return `
-          <div class="question arrange">
-            <h3 class="question-text">${question.text}</h3>
-            <div class="steps sortable">
-              ${question.steps.map((step, index) => `
-                <div class="step" data-index="${index}">
-                  <i class="fas fa-grip-vertical"></i>
-                  <span>${step}</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      
-      default:
-        return `<div class="error">Unknown question type</div>`;
-    }
-  }
-
-  static checkAnswer(exercise) {
-    const question = exercise.questions[exercise.currentQuestion];
-    let isCorrect = false;
-    let userAnswer;
-
-    switch (question.type) {
-      case 'multiple-choice':
-        const selectedOption = document.querySelector('.option.selected');
-        if (!selectedOption) {
-          notifications.warning('Select an Answer', 'Please select an answer before checking.');
-          return;
-        }
-        userAnswer = parseInt(selectedOption.dataset.index);
-        isCorrect = userAnswer === question.correctAnswer;
-        break;
-
-      case 'arrange':
-        const steps = Array.from(document.querySelectorAll('.step')).map(step => parseInt(step.dataset.index));
-        userAnswer = steps;
-        isCorrect = steps.every((step, index) => step === index);
-        break;
-    }
-
-    if (isCorrect) {
-      exercise.score += 10;
-      notifications.success('Correct!', '+10 points');
-      
-      if (exercise.currentQuestion < exercise.questions.length - 1) {
-        exercise.currentQuestion++;
-        document.querySelector('.exercise-content').innerHTML = WorkerDashboard.renderQuestion(exercise.questions[exercise.currentQuestion]);
-        document.querySelector('.progress').style.width = `${(exercise.currentQuestion / exercise.questions.length) * 100}%`;
-      } else {
-        // Lesson completed
-        modal.hide();
-        notifications.success('Lesson Completed!', `You earned ${exercise.score} points!`);
-        window.workerDashboard.updateLessonStatus();
-      }
-    } else {
-      exercise.lives--;
-      document.querySelector('.lives').innerHTML = Array(exercise.lives).fill(0).map(() => '<i class="fas fa-heart" style="color: #FF5252;"></i>').join('');
-      
-      if (exercise.lives === 0) {
-        modal.hide();
-        notifications.error('Game Over', 'You ran out of lives! Try again.');
-      } else {
-        notifications.error('Incorrect', 'Try again! -1 life');
-      }
-    }
-  }
-
-  updateLessonStatus() {
-    // Update lesson status in user data
-    const user = authSystem.getCurrentUser();
-    user.dailyProgress = (user.dailyProgress || 0) + 10;
-    if (user.dailyProgress >= user.dailyGoal) {
-      user.streak = (user.streak || 0) + 1;
-      user.dailyProgress = 0;
-      notifications.success('Daily Goal Achieved!', `${user.streak} day streak! Keep it up!`);
-    }
-    authSystem.updateUser(user);
-    
-    // Refresh the training view
-    this.navigate('training');
-  }
-
-  toggleDutyStatus() {
-    this.isOnDuty = !this.isOnDuty;
-    
-    if (this.isOnDuty) {
-      notifications.success('Shift Started', 'You are now on duty. Location tracking has been enabled.');
-      this.locationTracking = true;
-    } else {
-      notifications.info('Shift Ended', 'You have successfully ended your shift.');
-      this.locationTracking = false;
-    }
-    
-    this.refresh();
-  }
-
-  startFacialRecognition() {
-    const faceArea = document.getElementById('faceRecognitionArea');
-    if (faceArea) {
-      faceArea.innerHTML = `
-        <div style="text-align: center; color: var(--primary);">
-          <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-          <p>Scanning face...</p>
-        </div>
-      `;
-    }
-
-    // Simulate facial recognition process
-    setTimeout(() => {
-      if (faceArea) {
-        faceArea.innerHTML = `
-          <div style="text-align: center; color: var(--success);">
-            <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-            <p>Recognition successful!</p>
-          </div>
-        `;
-      }
-      
-      notifications.success('Login Successful', 'Facial recognition completed. Attendance marked.');
-      this.isOnDuty = true;
-      
-      setTimeout(() => {
-        this.refresh();
-      }, 2000);
-    }, 3000);
-  }
-
-  toggleLocationTracking() {
-    this.locationTracking = !this.locationTracking;
-    
-    if (this.locationTracking) {
-      notifications.success('Location Tracking', 'Your location is now being shared with the system');
-    } else {
-      notifications.warning('Location Tracking', 'Location sharing has been disabled');
-    }
-    
-    this.refresh();
-  }
-
-  updateLocation() {
-    notifications.info('Location Update', 'Updating your current location...');
-    
-    // Simulate location update
-    setTimeout(() => {
-      notifications.success('Location Updated', 'Your location has been successfully updated');
-    }, 1500);
-  }
-
-  startVehicleTracking() {
-    notifications.success('Vehicle Broadcasting', 'Your vehicle location is now being broadcast to citizens');
-  }
-
-  reportVehicleIssue() {
+  reportIssue() {
     const content = `
-      <form class="vehicle-issue-form">
+      <form class="issue-form">
         <div class="form-group" style="margin-bottom: 1rem;">
           <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Issue Type</label>
           <select class="form-control" required>
             <option value="">Select issue type</option>
-            <option value="mechanical">Mechanical Problem</option>
-            <option value="fuel">Fuel Issue</option>
-            <option value="tire">Tire Problem</option>
-            <option value="electrical">Electrical Issue</option>
+            <option value="equipment">Equipment Problem</option>
+            <option value="safety">Safety Concern</option>
+            <option value="route">Route Issue</option>
             <option value="other">Other</option>
           </select>
         </div>
         
         <div class="form-group" style="margin-bottom: 1rem;">
           <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Description</label>
-          <textarea class="form-control" rows="4" placeholder="Describe the vehicle issue in detail..." required></textarea>
+          <textarea class="form-control" rows="4" placeholder="Describe the issue in detail..." required></textarea>
         </div>
         
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Severity</label>
+        <div class="form-group" style="margin-bottom: 2rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Priority</label>
           <select class="form-control" required>
-            <option value="low">Low - Can continue work</option>
-            <option value="medium">Medium - Affects efficiency</option>
-            <option value="high">High - Cannot continue work</option>
+            <option value="low">Low - Can wait</option>
+            <option value="medium" selected>Medium - Should be addressed</option>
+            <option value="high">High - Urgent</option>
           </select>
         </div>
         
         <div style="display: flex; gap: 1rem; justify-content: flex-end;">
           <button type="button" class="btn btn-ghost" onclick="modal.hide()">Cancel</button>
-          <button type="submit" class="btn btn-warning">
-            <i class="fas fa-exclamation-triangle"></i>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i>
             Report Issue
           </button>
         </div>
       </form>
     `;
 
-    modal.show('Report Vehicle Issue', content);
+    modal.show('Report Issue', content);
   }
 
   startTask(taskId) {
-    notifications.info('Task Started', `Task ${taskId} has been started. Navigate to the location to begin work.`);
+    notifications.success('Task Started', `Task ${taskId} is now in progress`);
     this.refresh();
   }
 
   completeTask(taskId) {
     const content = `
-      <div class="complete-task-form">
-        <h3 style="margin-bottom: 1rem; text-align: center;">Complete Task</h3>
-        <p style="color: var(--gray-600); margin-bottom: 2rem; text-align: center;">
-          Upload a geo-tagged photo as proof of completion
-        </p>
+      <div class="task-completion">
+        <h3 style="text-align: center; margin-bottom: 2rem;">Complete Task ${taskId}</h3>
         
-        <div class="photo-upload" style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center; margin-bottom: 2rem; background: var(--gray-50);">
-          <i class="fas fa-camera" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
-          <p style="margin-bottom: 1rem;">Take a photo of the completed work</p>
-          <button type="button" class="btn btn-primary" onclick="window.WorkerDashboard.capturePhoto()">
-            <i class="fas fa-camera"></i>
-            Capture Photo
-          </button>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Upload Completion Photo</label>
+          <div class="photo-upload-area" style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center; background: var(--gray-50);">
+            <i class="fas fa-camera" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+            <p style="margin-bottom: 1rem; color: var(--gray-600);">Upload a photo showing completed work</p>
+            <button type="button" class="btn btn-secondary">
+              <i class="fas fa-camera"></i>
+              Capture Photo
+            </button>
+          </div>
         </div>
         
         <div class="form-group" style="margin-bottom: 2rem;">
-          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Additional Notes (Optional)</label>
-          <textarea class="form-control" rows="3" placeholder="Any additional information about the completed task..."></textarea>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Completion Notes</label>
+          <textarea class="form-control" rows="3" placeholder="Any additional notes about the completed task..."></textarea>
         </div>
         
         <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-          <button type="button" class="btn btn-ghost" onclick="modal.hide()">Cancel</button>
-          <button type="button" class="btn btn-success" onclick="window.WorkerDashboard.submitTaskCompletion('${taskId}')">
+          <button class="btn btn-ghost" onclick="modal.hide()">Cancel</button>
+          <button class="btn btn-success" onclick="window.WorkerDashboard.confirmTaskCompletion('${taskId}')">
             <i class="fas fa-check"></i>
-            Submit Completion
+            Mark Complete
           </button>
         </div>
       </div>
     `;
 
-    modal.show('Complete Task', content);
+    modal.show('Complete Task', content, { size: '600px' });
   }
 
-  capturePhoto() {
-    notifications.info('Photo Capture', 'Capturing photo with GPS coordinates...');
-    
-    // Simulate photo capture
-    setTimeout(() => {
-      const photoArea = document.querySelector('.photo-upload');
-      if (photoArea) {
-        photoArea.innerHTML = `
-          <div style="color: var(--success);">
-            <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-            <p>Photo captured successfully!</p>
-            <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">
-              GPS: 28.6139°N, 77.2090°E<br>
-              Time: ${new Date().toLocaleString()}
-            </div>
-          </div>
-        `;
-      }
-    }, 2000);
-  }
-
-  submitTaskCompletion(taskId) {
-    notifications.success('Task Completed', `Task ${taskId} has been marked as completed and sent for admin approval`);
+  confirmTaskCompletion(taskId) {
+    notifications.success('Task Completed', `Task ${taskId} has been marked as complete`);
     modal.hide();
     this.refresh();
   }
 
-  reportEmergency() {
+  viewTask(taskId) {
+    notifications.info('Task Details', `Viewing details for task ${taskId}`);
+  }
+
+  markBreak() {
+    notifications.info('Break Started', 'Enjoy your break! Remember to check back in');
+  }
+
+  checkOut() {
+    notifications.success('Checked Out', 'You have successfully checked out for the day');
+  }
+
+  refreshLocation() {
+    notifications.info('Refreshing Location', 'Updating your current location...');
+    setTimeout(() => {
+      notifications.success('Location Updated', 'Your location has been refreshed');
+    }, 1500);
+  }
+
+  shareLocation() {
+    notifications.success('Location Shared', 'Your location is now being shared with the dispatch team');
+  }
+
+  showCertificates() {
+    const user = authSystem.getCurrentUser();
+    const certificates = window.TrainingSystem.getUserCertificates(user.id);
+    
+    if (certificates.length === 0) {
+      const content = `
+        <div style="text-align: center; padding: 2rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+          <h3 style="margin-bottom: 1rem;">No Certificates Yet</h3>
+          <p style="color: var(--gray-600); margin-bottom: 2rem;">Complete all training modules to earn your safety certificate!</p>
+          <button class="btn btn-primary" onclick="modal.hide(); navigation.navigateTo('training');">
+            <i class="fas fa-graduation-cap"></i>
+            Start Training
+          </button>
+        </div>
+      `;
+      modal.show('My Certificates', content);
+      return;
+    }
+
     const content = `
-      <div class="emergency-report" style="text-align: center;">
-        <div style="color: var(--error); margin-bottom: 2rem;">
-          <i class="fas fa-exclamation-triangle" style="font-size: 4rem; margin-bottom: 1rem;"></i>
-          <h2>Emergency Report</h2>
-        </div>
+      <div class="certificates-list">
+        <h3 style="text-align: center; margin-bottom: 2rem;">🏆 My Safety Certificates</h3>
         
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
-          <button class="btn btn-error" onclick="window.WorkerDashboard.reportEmergencyType('accident')">
-            <i class="fas fa-ambulance"></i>
-            Accident
-          </button>
-          <button class="btn btn-error" onclick="window.WorkerDashboard.reportEmergencyType('fire')">
-            <i class="fas fa-fire"></i>
-            Fire
-          </button>
-          <button class="btn btn-error" onclick="window.WorkerDashboard.reportEmergencyType('hazmat')">
-            <i class="fas fa-radiation"></i>
-            Hazardous Material
-          </button>
-          <button class="btn btn-error" onclick="window.WorkerDashboard.reportEmergencyType('other')">
-            <i class="fas fa-exclamation"></i>
-            Other Emergency
-          </button>
-        </div>
+        ${certificates.map(cert => `
+          <div class="certificate-item" style="border: 1px solid var(--gray-200); border-radius: 12px; padding: 2rem; margin-bottom: 1rem; background: var(--white);">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+              <div>
+                <h4 style="margin-bottom: 0.5rem; color: var(--primary);">${cert.title}</h4>
+                <p style="color: var(--gray-600); margin: 0;">Issued: ${Utils.formatDate(new Date(cert.issueDate))}</p>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🛡️</div>
+                <div style="font-size: 0.875rem; color: var(--gray-500);">ID: ${cert.id}</div>
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+              <button class="btn btn-secondary" onclick="window.TrainingSystem.exportCertificate('${cert.id}')">
+                <i class="fas fa-download"></i>
+                View Certificate
+              </button>
+            </div>
+          </div>
+        `).join('')}
         
-        <div style="text-align: center;">
-          <button class="btn btn-ghost" onclick="modal.hide()">Cancel</button>
+        <div style="text-align: center; margin-top: 2rem;">
+          <button class="btn btn-primary" onclick="modal.hide()">Close</button>
         </div>
       </div>
     `;
 
-    modal.show('Emergency Alert', content);
+    modal.show('My Safety Certificates', content, { size: '700px' });
   }
 
-  reportEmergencyType(type) {
-    notifications.error('Emergency Reported', `${Utils.capitalize(type)} emergency has been reported. Emergency services have been notified.`);
-    modal.hide();
-  }
+  showSafetyTips() {
+    const tips = [
+      {
+        title: 'Personal Protective Equipment',
+        icon: '🦺',
+        tip: 'Always wear your complete PPE: hard hat, safety vest, gloves, and safety boots before starting work.'
+      },
+      {
+        title: 'Lifting Techniques',
+        icon: '💪',
+        tip: 'Bend your knees, not your back. Keep the load close to your body and lift with your legs.'
+      },
+      {
+        title: 'Vehicle Safety',
+        icon: '🚛',
+        tip: 'Always perform pre-trip inspections. Check brakes, lights, and hydraulic systems before starting your route.'
+      },
+      {
+        title: 'Chemical Handling',
+        icon: '⚠️',
+        tip: 'Never handle unknown chemicals. Report spills immediately and keep safety data sheets accessible.'
+      },
+      {
+        title: 'Weather Awareness',
+        icon: '🌧️',
+        tip: 'Adjust your work pace during extreme weather. Use extra caution on wet or icy surfaces.'
+      }
+    ];
 
-  viewTaskDetails(taskId) {
-    notifications.info('Task Details', `Viewing details for task ${taskId}`);
-  }
+    const content = `
+      <div class="safety-tips">
+        <h3 style="text-align: center; margin-bottom: 2rem;">🛡️ Daily Safety Tips</h3>
+        
+        <div class="tips-grid" style="display: grid; gap: 1rem;">
+          ${tips.map(tip => `
+            <div class="tip-card" style="display: flex; align-items: start; gap: 1rem; padding: 1.5rem; border: 1px solid var(--gray-200); border-radius: 12px; background: var(--white);">
+              <div style="font-size: 2rem; flex-shrink: 0;">${tip.icon}</div>
+              <div>
+                <h4 style="margin-bottom: 0.5rem; color: var(--gray-900);">${tip.title}</h4>
+                <p style="color: var(--gray-600); margin: 0; line-height: 1.5;">${tip.tip}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--gray-200);">
+          <p style="color: var(--gray-600); margin-bottom: 1rem;">Remember: Safety first, always!</p>
+          <button class="btn btn-primary" onclick="modal.hide()">Got It!</button>
+        </div>
+      </div>
+    `;
 
-  reportIssue(taskId) {
-    notifications.warning('Issue Reported', `Issue reported for task ${taskId}. Admin will be notified.`);
+    modal.show('Safety Tips', content, { size: '600px' });
   }
 
   bindEvents() {
