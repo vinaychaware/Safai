@@ -315,6 +315,7 @@ body {
   justify-content: space-between;
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
 }
 
 .nav-brand {
@@ -325,23 +326,29 @@ body {
   font-size: 1.25rem;
   color: var(--gray-900);
   white-space: nowrap;
-  overflow: hidden;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .brand-text {
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .nav-user {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 #userInfo {
   color: var(--gray-600);
   font-weight: 500;
   font-size: 0.9rem;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 /* Sidebar */
@@ -357,8 +364,23 @@ body {
   z-index: 100;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease;
+  -webkit-overflow-scrolling: touch;
 }
 
+/* Mobile sidebar overlay */
+@media (max-width: 1199px) {
+  .sidebar.mobile-open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    backdrop-filter: blur(2px);
+  }
+}
 .sidebar-nav {
   padding: 2rem 0;
 }
@@ -916,6 +938,10 @@ body {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
 }
 
 .mobile-toggle:hover {
@@ -940,15 +966,16 @@ body {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
   }
   
-  .sidebar.open {
+  .sidebar.mobile-open {
     transform: translateX(0);
     box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
   }
   
   .mobile-toggle {
-    display: block !important;
+    display: flex !important;
   }
   
   .nav-brand span {
@@ -1030,31 +1057,24 @@ body {
   }
   
   #userInfo {
-    display: none;
+    font-size: 0.8rem;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .nav-brand .brand-text {
+    display: none !important;
+  }
+  
+  .sidebar {
+    width: 100% !important;
+    max-width: 320px;
   }
 }
 
 @media (max-width: 600px) {
-  /* Fix logo and brand display */
-  .nav-brand {
-    gap: 0.5rem !important;
-    font-size: 1.1rem !important;
-  }
-  
-  .nav-brand i {
-    font-size: 1.25rem !important;
-  }
-  
-  .nav-brand span {
-    display: inline !important;
-    font-size: 1rem !important;
-  }
-  
-  .brand-text {
-    display: inline !important;
-    font-size: 1rem !important;
-  }
-  
   .login-container {
     padding: 2rem 1.5rem !important;
     border-radius: 16px !important;
@@ -1164,29 +1184,29 @@ body {
   }
   
   .nav-brand {
-    font-size: 1.1rem;
-  }
-  
-  .nav-brand span {
-    display: none !important;
-  }
-  
-  .brand-text {
-    display: none !important;
-  }
-  
-  .nav-brand {
-    gap: 0.5rem !important;
     font-size: 1rem !important;
+    gap: 0.5rem !important;
   }
   
   .nav-brand i {
-    font-size: 1.1rem !important;
+    font-size: 1.2rem !important;
+  }
+  
+  .brand-text {
+    display: inline !important;
+    font-size: 0.9rem !important;
+  }
+  
+  #userInfo {
+    display: none !important;
+  }
+  
+  .nav-container {
+    padding: 0 0.75rem !important;
   }
   
   .sidebar {
-    width: 100% !important;
-    max-width: 320px;
+    width: 280px !important;
   }
   
   .nav-link {
@@ -1198,24 +1218,24 @@ body {
   }
   
   .mobile-toggle {
-    font-size: 1.1rem;
-    padding: 6px;
+    font-size: 1.2rem !important;
+    min-width: 36px !important;
+    height: 36px !important;
   }
 }
 /* Additional responsive utilities */
 @media (max-width: 480px) {
-  /* Ensure proper logo display on very small screens */
   .nav-brand {
-    gap: 0.25rem !important;
-    font-size: 0.9rem !important;
-  }
-  
-  .nav-brand i {
+    gap: 0.5rem !important;
     font-size: 1rem !important;
   }
   
-  .nav-container {
-    padding: 0 0.75rem !important;
+  .nav-brand i {
+    font-size: 1.1rem !important;
+  }
+  
+  .brand-text {
+    font-size: 0.85rem !important;
   }
   
   .login-container {
@@ -1269,6 +1289,10 @@ body {
     height: 60px;
   }
   
+  :root {
+    --header-height: 60px;
+  }
+  
   .main-content {
     margin-top: 60px;
   }
@@ -1276,12 +1300,17 @@ body {
   .sidebar {
     top: 60px;
     height: calc(100vh - 60px);
-    width: 100% !important;
-    max-width: 300px;
+    width: 260px !important;
   }
   
   .notifications-container {
     top: 70px;
+  }
+  
+  .mobile-toggle {
+    font-size: 1.1rem !important;
+    min-width: 32px !important;
+    height: 32px !important;
   }
 }
 

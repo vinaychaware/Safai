@@ -1,4 +1,4 @@
-// Navigation component
+// Navigation component - Simplified for better compatibility
 class Navigation {
   constructor() {
     this.sidebar = document.getElementById('sidebar');
@@ -6,94 +6,139 @@ class Navigation {
     this.mainContent = document.getElementById('mainContent');
     this.currentUser = null;
     this.currentRole = null;
+    this.mobileToggle = null;
     
-    this.init();
+    // Bind methods to preserve context
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleEscapeKey = this.handleEscapeKey.bind(this);
   }
 
   init() {
     // Handle navigation clicks
-    this.sidebarNav.addEventListener('click', (e) => {
-      const link = e.target.closest('.nav-link');
-      if (link) {
-        e.preventDefault();
-        const section = link.dataset.section;
-        if (section) {
-          this.navigateTo(section);
+    if (this.sidebarNav) {
+      this.sidebarNav.addEventListener('click', (e) => {
+        const link = e.target.closest('.nav-link');
+        if (link) {
+          e.preventDefault();
+          const section = link.dataset.section;
+          if (section) {
+            this.navigateTo(section);
+          }
         }
-      }
-    });
+      });
+    }
 
-    // Mobile sidebar toggle (for responsive design)
+    // Setup mobile functionality
     this.setupMobileToggle();
+    
+    // Setup escape key handler
+    document.addEventListener('keydown', this.handleEscapeKey);
   }
 
   setupMobileToggle() {
-    // Add mobile menu button
     const navContainer = document.querySelector('.nav-container');
     if (!navContainer) return;
     
-    const mobileToggle = document.createElement('button');
-    mobileToggle.className = 'mobile-toggle btn btn-ghost';
-    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-    mobileToggle.setAttribute('aria-label', 'Toggle navigation menu');
-    mobileToggle.setAttribute('aria-expanded', 'false');
+    // Remove existing mobile toggle if present
+    const existingToggle = navContainer.querySelector('.mobile-toggle');
+    if (existingToggle) {
+      existingToggle.remove();
+    }
+    
+    // Create new mobile toggle
+    this.mobileToggle = document.createElement('button');
+    this.mobileToggle.className = 'mobile-toggle';
+    this.mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    this.mobileToggle.setAttribute('aria-label', 'Toggle navigation menu');
+    this.mobileToggle.setAttribute('aria-expanded', 'false');
     
     // Insert before user info
-    navContainer.insertBefore(mobileToggle, navContainer.lastElementChild);
+    const userInfo = navContainer.querySelector('.nav-user');
+    if (userInfo) {
+      navContainer.insertBefore(this.mobileToggle, userInfo);
+    } else {
+      navContainer.appendChild(this.mobileToggle);
+    }
 
-    // Toggle sidebar on mobile
-    mobileToggle.addEventListener('click', () => {
-      console.log('Mobile toggle clicked'); // Debug log
-      this.sidebar.classList.toggle('open');
-      const isOpen = this.sidebar.classList.contains('open');
-      mobileToggle.setAttribute('aria-expanded', isOpen);
-      mobileToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-      
-      // Add/remove body scroll lock
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
+    // Add click handler
+    this.mobileToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleMobileSidebar();
     });
 
-    // Show mobile toggle on small screens
+    // Handle responsive display
+    this.handleMobileToggleDisplay();
+  }
+
+  handleMobileToggleDisplay() {
+    if (!this.mobileToggle) return;
+    
     const mediaQuery = window.matchMedia('(max-width: 1199px)');
     const handleMediaQuery = (e) => {
-      mobileToggle.style.display = e.matches ? 'block' : 'none';
-      if (!e.matches) {
-        this.sidebar.classList.remove('open');
-        mobileToggle.setAttribute('aria-expanded', 'false');
-        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-        document.body.style.overflow = '';
+      this.mobileToggle.style.display = e.matches ? 'flex' : 'none';
+      
+      if (!e.matches && this.sidebar) {
+        this.closeMobileSidebar();
       }
     };
 
     mediaQuery.addEventListener('change', handleMediaQuery);
     handleMediaQuery(mediaQuery);
+  }
 
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', (e) => {
-      if (window.innerWidth <= 1199) {
-        if (!this.sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
-          this.sidebar.classList.remove('open');
-          mobileToggle.setAttribute('aria-expanded', 'false');
-          mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-          document.body.style.overflow = '';
-        }
-      }
-    });
+  toggleMobileSidebar() {
+    if (!this.sidebar || !this.mobileToggle) return;
     
-    // Close sidebar on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.sidebar.classList.contains('open')) {
-        this.sidebar.classList.remove('open');
-        mobileToggle.setAttribute('aria-expanded', 'false');
-        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-        document.body.style.overflow = '';
-        mobileToggle.focus();
+    const isOpen = this.sidebar.classList.contains('mobile-open');
+    
+    if (isOpen) {
+      this.closeMobileSidebar();
+    } else {
+      this.openMobileSidebar();
+    }
+  }
+
+  openMobileSidebar() {
+    if (!this.sidebar || !this.mobileToggle) return;
+    
+    this.sidebar.classList.add('mobile-open');
+    this.mobileToggle.setAttribute('aria-expanded', 'true');
+    this.mobileToggle.innerHTML = '<i class="fas fa-times"></i>';
+    document.body.style.overflow = 'hidden';
+    
+    // Add event listeners for closing
+    setTimeout(() => {
+      document.addEventListener('click', this.handleClickOutside);
+    }, 100);
+  }
+
+  closeMobileSidebar() {
+    if (!this.sidebar || !this.mobileToggle) return;
+    
+    this.sidebar.classList.remove('mobile-open');
+    this.mobileToggle.setAttribute('aria-expanded', 'false');
+    this.mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    document.body.style.overflow = '';
+    
+    // Remove event listeners
+    document.removeEventListener('click', this.handleClickOutside);
+  }
+
+  handleClickOutside(e) {
+    if (!this.sidebar || !this.mobileToggle) return;
+    
+    if (!this.sidebar.contains(e.target) && !this.mobileToggle.contains(e.target)) {
+      this.closeMobileSidebar();
+    }
+  }
+
+  handleEscapeKey(e) {
+    if (e.key === 'Escape' && this.sidebar && this.sidebar.classList.contains('mobile-open')) {
+      this.closeMobileSidebar();
+      if (this.mobileToggle) {
+        this.mobileToggle.focus();
       }
-    });
+    }
   }
 
   setUser(user, role) {
@@ -103,7 +148,7 @@ class Navigation {
   }
 
   updateNavigation() {
-    if (!this.currentRole) return;
+    if (!this.currentRole || !this.sidebarNav) return;
 
     const navigationItems = this.getNavigationItems(this.currentRole);
     
@@ -132,15 +177,14 @@ class Navigation {
     };
 
     const roleSpecificItems = {
-      [USER_ROLES.SUPERADMIN]: [
+      'superadmin': [
         commonItems.dashboard,
         { section: 'analytics', icon: 'fas fa-chart-bar', label: 'Analytics' },
         { section: 'system-management', icon: 'fas fa-cogs', label: 'System Management' },
         { section: 'reports', icon: 'fas fa-file-alt', label: 'Reports' },
         commonItems.profile
       ],
-
-      [USER_ROLES.ADMIN]: [
+      'admin': [
         commonItems.dashboard,
         { section: 'complaints', icon: 'fas fa-exclamation-triangle', label: 'Complaints' },
         { section: 'workforce', icon: 'fas fa-users', label: 'Workforce' },
@@ -149,8 +193,7 @@ class Navigation {
         commonItems.training,
         commonItems.profile
       ],
-
-      [USER_ROLES.GREEN_CHAMPION]: [
+      'green-champion': [
         commonItems.dashboard,
         { section: 'my-reports', icon: 'fas fa-flag', label: 'My Reports' },
         { section: 'community', icon: 'fas fa-users', label: 'Community' },
@@ -159,8 +202,7 @@ class Navigation {
         commonItems.training,
         commonItems.profile
       ],
-
-      [USER_ROLES.WORKER]: [
+      'worker': [
         commonItems.dashboard,
         { section: 'my-tasks', icon: 'fas fa-clipboard-list', label: 'My Tasks' },
         { section: 'attendance', icon: 'fas fa-calendar-check', label: 'Attendance' },
@@ -168,8 +210,7 @@ class Navigation {
         commonItems.training,
         commonItems.profile
       ],
-
-      [USER_ROLES.CITIZEN]: [
+      'citizen': [
         commonItems.dashboard,
         { section: 'submit-complaint', icon: 'fas fa-plus-circle', label: 'Report Issue' },
         { section: 'my-complaints', icon: 'fas fa-list-alt', label: 'My Complaints' },
@@ -185,7 +226,7 @@ class Navigation {
 
   navigateTo(section) {
     // Update active navigation item
-    const navLinks = this.sidebarNav.querySelectorAll('.nav-link');
+    const navLinks = this.sidebarNav ? this.sidebarNav.querySelectorAll('.nav-link') : [];
     navLinks.forEach(link => {
       if (link.dataset.section === section) {
         link.classList.add('active');
@@ -196,47 +237,61 @@ class Navigation {
 
     // Close mobile sidebar
     if (window.innerWidth <= 1199) {
-      this.sidebar.classList.remove('open');
-      document.body.style.overflow = '';
-      
-      // Update mobile toggle button
-      const mobileToggle = document.querySelector('.mobile-toggle');
-      if (mobileToggle) {
-        mobileToggle.setAttribute('aria-expanded', 'false');
-        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-  }
+      this.closeMobileSidebar();
+    }
 
-const dashboards = {
-  [USER_ROLES.ADMIN]: window.AdminDashboard,
-  [USER_ROLES.GREEN_CHAMPION]: window.GreenChampionDashboard,
-      [USER_ROLES.WORKER]: window.WorkerDashboard,
-      [USER_ROLES.CITIZEN]: window.CitizenDashboard
-    };
+    // Load dashboard section using the app instance
+    if (window.app && typeof window.app.loadDashboardSection === 'function') {
+      window.app.loadDashboardSection(section);
+    } else {
+      // Fallback to old method
+      const dashboards = {
+        'superadmin': window.SuperadminDashboard,
+        'admin': window.AdminDashboard,
+        'green-champion': window.GreenChampionDashboard,
+        'worker': window.WorkerDashboard,
+        'citizen': window.CitizenDashboard
+      };
 
       const dashboard = dashboards[this.currentRole];
-      if (dashboard) {
-        // Set current dashboard reference
+      if (dashboard && typeof dashboard.loadSection === 'function') {
         window.currentDashboard = dashboard;
-        
-        // Load the section
         dashboard.loadSection(section);
       }
     }
   }
 
   show() {
-    document.getElementById('navHeader').classList.remove('hidden');
-    this.sidebar.classList.remove('hidden');
-    this.mainContent.classList.remove('hidden');
+    const navHeader = document.getElementById('navHeader');
+    if (navHeader) navHeader.classList.remove('hidden');
+    if (this.sidebar) this.sidebar.classList.remove('hidden');
+    if (this.mainContent) this.mainContent.classList.remove('hidden');
   }
 
   hide() {
-    document.getElementById('navHeader').classList.add('hidden');
-    this.sidebar.classList.add('hidden');
-    this.mainContent.classList.add('hidden');
+    const navHeader = document.getElementById('navHeader');
+    if (navHeader) navHeader.classList.add('hidden');
+    if (this.sidebar) this.sidebar.classList.add('hidden');
+    if (this.mainContent) this.mainContent.classList.add('hidden');
+  }
+
+  // Cleanup method
+  destroy() {
+    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('keydown', this.handleEscapeKey);
+    
+    if (this.mobileToggle && this.mobileToggle.parentNode) {
+      this.mobileToggle.parentNode.removeChild(this.mobileToggle);
+    }
   }
 }
 
-// Initialize navigation
-var navigation = new Navigation();
-window.navigation = navigation;
+// Initialize navigation - but don't auto-create instance
+// Let the main app handle this
+window.Navigation = Navigation;
+
+// For backward compatibility
+if (!window.navigation) {
+  window.navigation = new Navigation();
+  window.navigation.init();
+}
