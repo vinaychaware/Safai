@@ -1,0 +1,97 @@
+/* Complaint Form Styles */
+.complaint-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .complaint-container {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.complaint-form-wrapper {
+  flex: 1;
+}
+
+.complaint-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  color: var(--gray-700);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.location-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .location-input-group {
+    flex-direction: row;
+  }
+  
+  .location-btn {
+    white-space: nowrap;
+  }
+}
+
+.photo-upload-area {
+  border: 2px dashed var(--gray-300);
+  border-radius: 0.5rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.photo-upload-area:hover {
+  border-color: var(--primary);
+  background-color: var(--gray-50);
+}
+
+.photo-upload-area i {
+  font-size: 2rem;
+  color: var(--gray-400);
+  margin-bottom: 1rem;
+}
+
+.photo-upload-area p {
+  color: var(--gray-600);
+  margin: 0;
+}
+
+.photo-input {
+  display: none;
+}
+
+.form-actions {
+  margin-top: 1rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+@media (max-width: 639px) {
+  .complaint-form {
+    gap: 1rem;
+  }
+  
+  .photo-upload-area {
+    padding: 1.5rem 1rem;
+  }
+}

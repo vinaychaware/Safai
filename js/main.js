@@ -26,29 +26,20 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Login logic
-  const loginBtn = document.getElementById('loginBtn');
-  if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
-      const role = document.getElementById('userRole').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      // Use authSystem from js/auth/auth.js
-      if (window.authSystem && window.authSystem.login(email, password, role)) {
-        // Save user info
-        window.Utils?.storage.set('currentUser', { email, role });
-        showScreen(mainContent);
-        navHeader.classList.remove('hidden');
-        sidebar.classList.remove('hidden');
-        mainContent.classList.remove('hidden');
-        // Load dashboard
-        loadDashboard(role);
-        // Update navigation
-  window.navigation?.init(role);
-      } else {
-        window.Notifications?.show('Invalid credentials', 'error');
-      }
-    });
+  // Helper: Show dashboard UI
+  function showDashboardUI() {
+    showScreen(mainContent);
+    navHeader.classList.remove('hidden');
+    sidebar.classList.remove('hidden');
+    mainContent.classList.remove('hidden');
+  }
+
+  // Helper: Hide dashboard UI
+  function hideDashboardUI() {
+    showScreen(loginScreen);
+    navHeader.classList.add('hidden');
+    sidebar.classList.add('hidden');
+    mainContent.classList.add('hidden');
   }
 
   // Logout logic
@@ -56,11 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       window.authSystem?.logout();
-      window.Utils?.storage.remove('currentUser');
-      showScreen(loginScreen);
-      navHeader.classList.add('hidden');
-      sidebar.classList.add('hidden');
-      mainContent.classList.add('hidden');
+      hideDashboardUI();
     });
   }
 
@@ -89,16 +76,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Auto-login if user is already stored
-  const storedUser = window.Utils?.storage.get('currentUser');
-  if (storedUser && storedUser.role) {
-    showScreen(mainContent);
-    navHeader.classList.remove('hidden');
-    sidebar.classList.remove('hidden');
-    mainContent.classList.remove('hidden');
-    loadDashboard(storedUser.role);
-  window.navigation?.init(storedUser.role);
+  // Check for existing session
+  const currentUser = window.authSystem?.getCurrentUser();
+  if (currentUser) {
+    showDashboardUI();
+    const currentRole = window.authSystem.getCurrentRole();
+    loadDashboard(currentRole);
+    window.navigation?.init(currentRole);
   } else {
-    showScreen(loginScreen);
+    hideDashboardUI();
   }
 });

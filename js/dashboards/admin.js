@@ -401,9 +401,9 @@ class AdminDashboard {
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Worker Directory</h3>
-          <div style="display: flex; gap: 1rem;">
-            <input type="text" class="form-control" placeholder="Search workers..." style="width: 250px;">
-            <select class="form-control" style="width: auto;">
+          <div class="worker-search-filters">
+            <input type="text" class="form-control worker-search" placeholder="Search workers...">
+            <select class="form-control zone-filter">
               <option>All Zones</option>
               <option>Zone A</option>
               <option>Zone B</option>
@@ -413,7 +413,7 @@ class AdminDashboard {
         </div>
         <div class="card-body">
           <div class="table-container">
-            <table class="table">
+            <table class="table worker-table">
               <thead>
                 <tr>
                   <th>Worker ID</th>
@@ -444,100 +444,155 @@ class AdminDashboard {
       { id: 'W004', name: 'Priya Patel', zone: 'Zone A', status: 'on_duty', tasks: 203, rating: 4.7, lastActive: '1 min ago' }
     ];
 
-    return workers.map(worker => `
-      <tr>
-        <td>${worker.id}</td>
-        <td>
-          <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem;">
+    return workers.map(worker => {
+      // Common elements
+      const avatar = worker.name.charAt(0);
+      const statusClass = worker.status === 'on_duty' ? 'on-duty' : 'off-duty';
+      const statusText = worker.status === 'on_duty' ? 'On Duty' : 'Off Duty';
+      const actionButtons = `
+        <button class="btn btn-ghost" onclick="window.AdminDashboard.viewWorker('${worker.id}')" title="View Profile">
+          <i class="fas fa-eye"></i>
+        </button>
+        <button class="btn btn-ghost" onclick="window.AdminDashboard.assignTask('${worker.id}')" title="Assign Task">
+          <i class="fas fa-tasks"></i>
+        </button>
+        <button class="btn btn-ghost" onclick="window.AdminDashboard.contactWorker('${worker.id}')" title="Contact">
+          <i class="fas fa-phone"></i>
+        </button>
+      `;
+
+      const statusBadge = `
+        <span class="status-badge ${worker.status === 'on_duty' ? 'on-duty' : 'off-duty'}">
+          ${worker.status === 'on_duty' ? 'On Duty' : 'Off Duty'}
+        </span>
+      `;
+
+      const rating = `
+        <div class="rating">
+          <span class="rating-star">★</span>
+          <span class="rating-value">${worker.rating}</span>
+        </div>
+      `;
+
+      // Mobile card view
+      const mobileCard = `
+        <div class="worker-card">
+          <div class="worker-card-header">
+            <div class="worker-avatar">
               ${worker.name.charAt(0)}
             </div>
-            ${worker.name}
+            <div class="worker-info">
+              <div class="worker-name">${worker.name}</div>
+              <div class="worker-id">${worker.id}</div>
+            </div>
+            ${statusBadge}
           </div>
-        </td>
-        <td>${worker.zone}</td>
-        <td>
-          <span class="badge ${worker.status === 'on_duty' ? 'badge-success' : 'badge-warning'}">
-            ${worker.status === 'on_duty' ? 'On Duty' : 'Off Duty'}
-          </span>
-        </td>
-        <td>${worker.tasks}</td>
-        <td>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="color: var(--warning);">★</span>
-            <span style="font-weight: 600;">${worker.rating}</span>
+          <div class="worker-meta">
+            <div class="meta-item">
+              <span class="meta-label">Zone</span>
+              ${worker.zone}
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Tasks</span>
+              ${worker.tasks}
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Rating</span>
+              ${rating}
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Last Active</span>
+              ${worker.lastActive}
+            </div>
           </div>
-        </td>
-        <td>${worker.lastActive}</td>
-        <td>
-          <div style="display: flex; gap: 0.5rem;">
-            <button class="btn btn-ghost" onclick="window.AdminDashboard.viewWorker('${worker.id}')" title="View Profile">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-ghost" onclick="window.AdminDashboard.assignTask('${worker.id}')" title="Assign Task">
-              <i class="fas fa-tasks"></i>
-            </button>
-            <button class="btn btn-ghost" onclick="window.AdminDashboard.contactWorker('${worker.id}')" title="Contact">
-              <i class="fas fa-phone"></i>
-            </button>
+          <div class="worker-actions">
+            ${actionButtons}
           </div>
-        </td>
-      </tr>
-    `).join('');
+        </div>
+      `;
+
+      // Desktop table row
+      const tableRow = `
+        <tr>
+          <td>${worker.id}</td>
+          <td>
+            <div class="worker-row-info">
+              <div class="worker-avatar">
+                ${worker.name.charAt(0)}
+              </div>
+              ${worker.name}
+            </div>
+          </td>
+          <td>${worker.zone}</td>
+          <td>${statusBadge}</td>
+          <td>${worker.tasks}</td>
+          <td>${rating}</td>
+          <td>${worker.lastActive}</td>
+          <td>
+            <div class="btn-group">
+              ${actionButtons}
+            </div>
+          </td>
+        </tr>
+      `;
+
+      return mobileCard + tableRow;
+    }).join('');
   }
 
   renderAssignments() {
     return `
-      <div class="dashboard-header">
-        <h1 class="dashboard-title">Task Assignments</h1>
-        <p class="dashboard-subtitle">Assign and monitor worker tasks</p>
-      </div>
+      <div class="assignments-container">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Task Assignments</h1>
+          <p class="dashboard-subtitle">Assign and monitor worker tasks</p>
+        </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Unassigned Complaints</h3>
+        <div class="assignments-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Unassigned Complaints</h3>
+            </div>
+            <div class="card-body">
+              <div class="scrollable-content">
+                ${this.renderUnassignedComplaints()}
+              </div>
+            </div>
           </div>
-          <div class="card-body">
-            <div style="max-height: 400px; overflow-y: auto;">
-              ${this.renderUnassignedComplaints()}
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Available Workers</h3>
+            </div>
+            <div class="card-body">
+              <div class="scrollable-content">
+                ${this.renderAvailableWorkers()}
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Available Workers</h3>
-          </div>
-          <div class="card-body">
-            <div style="max-height: 400px; overflow-y: auto;">
-              ${this.renderAvailableWorkers()}
+        <div class="assignments-section">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Active Assignments</h3>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top: 2rem;">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Active Assignments</h3>
-          </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Task ID</th>
-                    <th>Description</th>
-                    <th>Assigned To</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Due Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${this.generateAssignmentRows()}
+            <div class="card-body">
+              <div class="table-container">
+                <table class="table assignments-table">
+                  <thead>
+                    <tr>
+                      <th>Task ID</th>
+                      <th>Description</th>
+                      <th>Assigned To</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Due Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${this.generateAssignmentRows()}
                 </tbody>
               </table>
             </div>
@@ -555,18 +610,22 @@ class AdminDashboard {
     ];
 
     return complaints.map(complaint => `
-      <div class="complaint-assignment-item" style="border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 0.5rem;">
-          <h4 style="margin-bottom: 0.25rem;">${complaint.title}</h4>
+      <div class="assignment-item">
+        <div class="assignment-header">
+          <h4 class="assignment-title">${complaint.title}</h4>
           ${Utils.getPriorityBadge(complaint.priority)}
         </div>
-        <p style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 1rem;">
-          <i class="fas fa-map-marker-alt"></i> ${complaint.location}
-        </p>
-        <button class="btn btn-primary" onclick="window.AdminDashboard.showAssignmentModal('${complaint.id}')">
-          <i class="fas fa-user-plus"></i>
-          Assign Worker
-        </button>
+        <div class="assignment-meta">
+          <div class="meta-item">
+            <i class="fas fa-map-marker-alt"></i> ${complaint.location}
+          </div>
+        </div>
+        <div class="assignment-footer">
+          <button class="btn btn-primary" onclick="window.AdminDashboard.showAssignmentModal('${complaint.id}')">
+            <i class="fas fa-user-plus"></i>
+            Assign Worker
+          </button>
+        </div>
       </div>
     `).join('');
   }
@@ -579,21 +638,31 @@ class AdminDashboard {
     ];
 
     return workers.map(worker => `
-      <div class="worker-assignment-item" style="border: 1px solid var(--gray-200); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
-          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+      <div class="worker-assignment-item">
+        <div class="worker-assignment-header">
+          <div class="worker-avatar">
             ${worker.name.charAt(0)}
           </div>
-          <div style="flex: 1;">
-            <h4 style="margin-bottom: 0.25rem;">${worker.name}</h4>
-            <div style="font-size: 0.875rem; color: var(--gray-600);">${worker.zone}</div>
+          <div class="worker-assignment-info">
+            <div class="worker-assignment-name">${worker.name}</div>
+            <div class="worker-assignment-zone">${worker.zone}</div>
           </div>
         </div>
-        <div style="display: flex; justify-content: between; align-items: center;">
-          <div style="font-size: 0.875rem; color: var(--gray-600);">
-            ${worker.currentTasks} active tasks • ★ ${worker.rating}
+        <div class="worker-assignment-meta">
+          <div class="meta-item">
+            <span class="meta-label">Active Tasks</span>
+            ${worker.currentTasks}
           </div>
-          <span class="badge badge-success">Available</span>
+          <div class="meta-item">
+            <span class="meta-label">Rating</span>
+            <div class="rating">
+              <span class="rating-star">★</span>
+              <span class="rating-value">${worker.rating}</span>
+            </div>
+          </div>
+        </div>
+        <div class="worker-assignment-footer">
+          <span class="status-badge on-duty">Available</span>
         </div>
       </div>
     `).join('');
@@ -606,28 +675,63 @@ class AdminDashboard {
       { id: 'T003', description: 'Remove illegal dumping', assignedTo: 'Ahmed Hassan', priority: 'high', status: 'completed', dueDate: '2024-01-15' }
     ];
 
-    return assignments.map(assignment => `
-      <tr>
-        <td>${assignment.id}</td>
-        <td>${assignment.description}</td>
-        <td>${assignment.assignedTo}</td>
-        <td>${Utils.getPriorityBadge(assignment.priority)}</td>
-        <td>${Utils.getStatusBadge(assignment.status)}</td>
-        <td>${assignment.dueDate}</td>
-        <td>
-          <div style="display: flex; gap: 0.5rem;">
-            <button class="btn btn-ghost" onclick="window.AdminDashboard.viewAssignment('${assignment.id}')" title="View">
-              <i class="fas fa-eye"></i>
-            </button>
-            ${assignment.status === 'completed' ? `
-              <button class="btn btn-ghost" onclick="window.AdminDashboard.approveTask('${assignment.id}')" title="Approve">
-                <i class="fas fa-check"></i>
-              </button>
-            ` : ''}
+    return assignments.map(assignment => {
+      const actionButtons = `
+        <button class="btn btn-ghost" onclick="window.AdminDashboard.viewAssignment('${assignment.id}')" title="View">
+          <i class="fas fa-eye"></i>
+        </button>
+        ${assignment.status === 'completed' ? `
+          <button class="btn btn-ghost" onclick="window.AdminDashboard.approveTask('${assignment.id}')" title="Approve">
+            <i class="fas fa-check"></i>
+          </button>
+        ` : ''}
+      `;
+
+      return `
+        <!-- Mobile view -->
+        <div class="assignment-card d-block d-md-none">
+          <div class="assignment-header">
+            <div class="assignment-info">
+              <div class="assignment-title">${assignment.description}</div>
+              <div class="assignment-id">${assignment.id}</div>
+            </div>
+            ${Utils.getStatusBadge(assignment.status)}
           </div>
-        </td>
-      </tr>
-    `).join('');
+          <div class="assignment-meta">
+            <div class="meta-item">
+              <span class="meta-label">Assigned To</span>
+              ${assignment.assignedTo}
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Priority</span>
+              ${Utils.getPriorityBadge(assignment.priority)}
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Due Date</span>
+              ${assignment.dueDate}
+            </div>
+          </div>
+          <div class="assignment-footer">
+            ${actionButtons}
+          </div>
+        </div>
+
+        <!-- Desktop view -->
+        <tr class="d-none d-md-table-row">
+          <td>${assignment.id}</td>
+          <td>${assignment.description}</td>
+          <td>${assignment.assignedTo}</td>
+          <td>${Utils.getPriorityBadge(assignment.priority)}</td>
+          <td>${Utils.getStatusBadge(assignment.status)}</td>
+          <td>${assignment.dueDate}</td>
+          <td>
+            <div class="btn-group">
+              ${actionButtons}
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   renderReports() {

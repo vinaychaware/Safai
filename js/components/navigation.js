@@ -204,29 +204,23 @@ class Navigation {
       if (mobileToggle) {
         mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-      }
-    }
-
-    // Load the appropriate content
-    this.loadSectionContent(section);
   }
 
-  loadSectionContent(section) {
-    const dashboards = {
-      [USER_ROLES.SUPERADMIN]: window.SuperadminDashboard,
-      [USER_ROLES.ADMIN]: window.AdminDashboard,
-      [USER_ROLES.GREEN_CHAMPION]: window.GreenChampionDashboard,
+const dashboards = {
+  [USER_ROLES.ADMIN]: window.AdminDashboard,
+  [USER_ROLES.GREEN_CHAMPION]: window.GreenChampionDashboard,
       [USER_ROLES.WORKER]: window.WorkerDashboard,
       [USER_ROLES.CITIZEN]: window.CitizenDashboard
     };
 
-    const dashboard = dashboards[this.currentRole];
-    if (dashboard) {
-      // Set current dashboard reference
-      window.currentDashboard = dashboard;
-      
-      // Load the section
-      dashboard.loadSection(section);
+      const dashboard = dashboards[this.currentRole];
+      if (dashboard) {
+        // Set current dashboard reference
+        window.currentDashboard = dashboard;
+        
+        // Load the section
+        dashboard.loadSection(section);
+      }
     }
   }
 
@@ -244,5 +238,5 @@ class Navigation {
 }
 
 // Initialize navigation
-const navigation = new Navigation();
+var navigation = new Navigation();
 window.navigation = navigation;

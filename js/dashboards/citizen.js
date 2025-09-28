@@ -50,54 +50,85 @@ class CitizenDashboard {
 
     return `
       <div class="dashboard-header">
-        <h1 class="dashboard-title">Citizen Dashboard</h1>
-        <p class="dashboard-subtitle">Welcome to Smart Waste Management, ${user.name}!</p>
+        <div class="header-content">
+          <h1 class="dashboard-title">Citizen Dashboard</h1>
+          <p class="dashboard-subtitle">Welcome to Smart Waste Management, ${user.name}!</p>
+        </div>
       </div>
       <div class="dashboard-stats">
         <div class="stat-card">
-          <div class="stat-header"><span class="stat-title">My Complaints</span><div class="stat-icon primary"><i class="fas fa-exclamation-circle"></i></div></div>
+          <div class="stat-header">
+            <span class="stat-title">My Complaints</span>
+            <div class="stat-icon primary">
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+          </div>
           <div class="stat-value">7</div>
-          <div class="stat-change positive"><i class="fas fa-check"></i> 5 resolved</div>
+          <div class="stat-change positive">
+            <i class="fas fa-check"></i> 5 resolved
+          </div>
         </div>
         <div class="stat-card">
-          <div class="stat-header"><span class="stat-title">Green Points</span><div class="stat-icon success"><i class="fas fa-coins"></i></div></div>
+          <div class="stat-header">
+            <span class="stat-title">Green Points</span>
+            <div class="stat-icon success">
+              <i class="fas fa-coins"></i>
+            </div>
+          </div>
           <div class="stat-value">${greenPoints.toLocaleString()}</div>
-          <div class="stat-change positive"><i class="fas fa-arrow-up"></i> +25 this week</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> +25 this week
+          </div>
         </div>
         <div class="stat-card">
-          <div class="stat-header"><span class="stat-title">Training Progress</span><div class="stat-icon secondary"><i class="fas fa-graduation-cap"></i></div></div>
+          <div class="stat-header">
+            <span class="stat-title">Training Progress</span>
+            <div class="stat-icon secondary">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+          </div>
           <div class="stat-value">${user.trainingProgress || 65}%</div>
         </div>
         <div class="stat-card">
-          <div class="stat-header"><span class="stat-title">Community Rank</span><div class="stat-icon warning"><i class="fas fa-trophy"></i></div></div>
+          <div class="stat-header">
+            <span class="stat-title">Community Rank</span>
+            <div class="stat-icon warning">
+              <i class="fas fa-trophy"></i>
+            </div>
+          </div>
           <div class="stat-value">#42</div>
         </div>
       </div>
-      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-top: 2rem;">
-        <div class="card">
-          <div class="card-header"><h3 class="card-title">Recent Complaints</h3><button class="btn btn-primary" onclick="navigation.navigateTo('my-complaints')"><i class="fas fa-eye"></i> View All</button></div>
+      <div class="dashboard-grid">
+        <div class="card dashboard-main">
+          <div class="card-header">
+            <h3 class="card-title">Recent Complaints</h3>
+            <button class="btn btn-primary" onclick="navigation.navigateTo('my-complaints')">
+              <i class="fas fa-eye"></i> View All
+            </button>
+          </div>
           <div class="card-body">
             <div class="recent-complaints">
-              <div class="complaint-item" style="padding: 1rem; border-bottom: 1px solid var(--gray-200);">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <div class="complaint-item">
+                <div class="complaint-header">
                   <strong>Overflowing bin near park</strong>
                   <span class="badge badge-warning">In Progress</span>
                 </div>
-                <div style="color: var(--gray-600);">Reported 2 days ago</div>
+                <div class="complaint-date">Reported 2 days ago</div>
               </div>
-              <div class="complaint-item" style="padding: 1rem; border-bottom: 1px solid var(--gray-200);">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <div class="complaint-item">
+                <div class="complaint-header">
                   <strong>Missed collection on Main St</strong>
                   <span class="badge badge-success">Resolved</span>
                 </div>
-                <div style="color: var(--gray-600);">Resolved yesterday</div>
+                <div class="complaint-date">Resolved yesterday</div>
               </div>
-              <div class="complaint-item" style="padding: 1rem;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <div class="complaint-item">
+                <div class="complaint-header">
                   <strong>Illegal dumping report</strong>
                   <span class="badge badge-info">Under Review</span>
                 </div>
-                <div style="color: var(--gray-600);">Reported today</div>
+                <div class="complaint-date">Reported today</div>
               </div>
             </div>
           </div>
@@ -163,41 +194,62 @@ class CitizenDashboard {
         <h1 class="dashboard-title">Report an Issue</h1>
         <p class="dashboard-subtitle">Help keep your community clean by reporting issues</p>
       </div>
-      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-        <div class="card">
-          <div class="card-header"><h3 class="card-title">Submit New Complaint</h3></div>
-          <div class="card-body">
-            <form id="complaintForm" class="complaint-form">
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Issue Type</label>
-                <select class="form-control" id="issueType" required><option value="">Select issue type</option><option>Overflowing Bin</option><option>Illegal Dumping</option><option>Missed Collection</option></select>
-              </div>
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Description</label>
-                <textarea class="form-control" rows="4" id="complaintDescription" placeholder="Provide detailed information..." required></textarea>
-              </div>
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Location</label>
-                <input type="text" class="form-control" id="complaintLocation" placeholder="Enter specific location" required>
-                <button type="button" class="btn btn-ghost" style="margin-top: 0.5rem;" onclick="window.CitizenDashboard.getCurrentLocation()"><i class="fas fa-map-marker-alt"></i> Use Current Location</button>
-              </div>
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Attach Photo (Optional)</label>
-                <div class="photo-upload-area" style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 2rem; text-align: center;">
-                  <i class="fas fa-camera" style="font-size: 2rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
-                  <p>Click to upload a photo</p>
-                  <input type="file" style="display: none;">
+      <div class="complaint-container">
+        <div class="complaint-form-wrapper">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Submit New Complaint</h3>
+            </div>
+            <div class="card-body">
+              <form id="complaintForm" class="complaint-form">
+                <div class="form-group">
+                  <label for="issueType" class="form-label">Issue Type</label>
+                  <select class="form-control" id="issueType" required>
+                    <option value="">Select issue type</option>
+                    <option>Overflowing Bin</option>
+                    <option>Illegal Dumping</option>
+                    <option>Missed Collection</option>
+                  </select>
                 </div>
-              </div>
-              <div class="form-actions" style="margin-top: 2rem;">
-                <button type="submit" class="btn btn-primary w-full"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
-              </div>
-            </form>
+                <div class="form-group">
+                  <label for="complaintDescription" class="form-label">Description</label>
+                  <textarea class="form-control" rows="4" id="complaintDescription" 
+                    placeholder="Provide detailed information..." required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="complaintLocation" class="form-label">Location</label>
+                  <div class="location-input-group">
+                    <input type="text" class="form-control" id="complaintLocation" 
+                      placeholder="Enter specific location" required>
+                    <button type="button" class="btn btn-ghost location-btn" 
+                      onclick="window.CitizenDashboard.getCurrentLocation()">
+                      <i class="fas fa-map-marker-alt"></i> Use Current Location
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Attach Photo (Optional)</label>
+                  <div class="photo-upload-area">
+                    <i class="fas fa-camera"></i>
+                    <p>Click to upload a photo</p>
+                    <input type="file" class="photo-input">
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-paper-plane"></i> Submit Complaint
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-header"><h3 class="card-title">Reporting Guidelines</h3></div>
-          <div class="card-body">
+        <div class="complaint-guidelines">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Reporting Guidelines</h3>
+            </div>
+            <div class="card-body">
             </div>
         </div>
       </div>
