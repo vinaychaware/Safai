@@ -236,57 +236,12 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Vehicle Tracking</h2>
               <p className="text-gray-600">Track garbage collection vehicles in real-time</p>
             </div>
-
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Live Vehicle Locations</h3>
-                <div className="bg-gray-100 rounded-xl h-64 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-600">Interactive map will be displayed here</p>
-                    <p className="text-sm text-gray-500">Showing real-time vehicle locations</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Truck className="w-5 h-5 text-green-600" />
-                    <span className="font-semibold text-green-800">Vehicle GC-001</span>
-                  </div>
-                  <p className="text-green-700">5 minutes away from your area</p>
-                  <p className="text-sm text-green-600">Currently at: Main Street</p>
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Bell className="w-5 h-5 text-blue-600" />
-                    <span className="font-semibold text-blue-800">Notifications</span>
-                  </div>
-                  <p className="text-blue-700">Get alerts when vehicle arrives</p>
-                  <button className="text-sm text-blue-600 hover:text-blue-800 mt-1">
-                    Enable notifications
-                  </button>
-                </div>
-              </div>
-            </div>
+            <VehicleTracker userRole="citizen" />
           </div>
         );
 
       case 'training':
         return <TrainingSystem user={user} />;
-
-      case 'tracking':
-        return (
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Vehicle Tracking</h2>
-              <p className="text-gray-600">Track garbage collection vehicles in real-time</p>
-            </div>
-            <VehicleTracker userRole="citizen" />
-          </div>
-        );
 
       case 'map':
         return (

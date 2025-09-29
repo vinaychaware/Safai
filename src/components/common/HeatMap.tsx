@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, AlertTriangle, CheckCircle, TrendingUp, Filter } from 'lucide-react';
+import { MapPin, AlertTriangle, CheckCircle, TrendingUp, Filter, Clock } from 'lucide-react';
 
 interface HeatMapProps {
   data?: Array<{
