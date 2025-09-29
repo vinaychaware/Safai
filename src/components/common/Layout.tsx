@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ user, onLogout, children, sidebarItems 
       <Header user={user} onLogout={onLogout} />
       <div className="flex">
         <Sidebar items={sidebarItems} />
-        <main className="flex-1 ml-80 p-8">
+        <main className="flex-1 lg:ml-80 p-4 lg:p-8 pt-20 lg:pt-24">
           {children}
         </main>
       </div>

@@ -16,12 +16,19 @@ import {
   AlertTriangle,
   Star,
   Target,
-  Zap
+  Zap,
+  QrCode,
+  Play,
+  FileText,
+  Globe,
+  Package,
+  Activity
 } from 'lucide-react';
 import { User } from '../../App';
 import Layout from '../common/Layout';
 import StatCard from '../common/StatCard';
 import TrainingSystem from '../training/TrainingSystem';
+import VehicleTracker from '../common/VehicleTracker';
 
 interface WorkerDashboardProps {
   user: User;
@@ -37,8 +44,11 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
     { icon: <CheckCircle className="w-5 h-5" />, label: 'Attendance', active: activeTab === 'attendance', onClick: () => setActiveTab('attendance') },
     { icon: <Truck className="w-5 h-5" />, label: 'Vehicle Tracking', active: activeTab === 'tracking', onClick: () => setActiveTab('tracking') },
     { icon: <MapPin className="w-5 h-5" />, label: 'Route Map', active: activeTab === 'routes', onClick: () => setActiveTab('routes') },
+    { icon: <Package className="w-5 h-5" />, label: 'Uber for Garbage', active: activeTab === 'uber', onClick: () => setActiveTab('uber') },
     { icon: <Award className="w-5 h-5" />, label: 'Incentives', active: activeTab === 'incentives', onClick: () => setActiveTab('incentives') },
     { icon: <AlertTriangle className="w-5 h-5" />, label: 'Penalties', active: activeTab === 'penalties', onClick: () => setActiveTab('penalties') },
+    { icon: <Globe className="w-5 h-5" />, label: 'Multilingual', active: activeTab === 'language', onClick: () => setActiveTab('language') },
+    { icon: <QrCode className="w-5 h-5" />, label: 'Digital ID', active: activeTab === 'digitalid', onClick: () => setActiveTab('digitalid') },
     { icon: <GraduationCap className="w-5 h-5" />, label: 'Training', active: activeTab === 'training', onClick: () => setActiveTab('training') },
     { icon: <Users className="w-5 h-5" />, label: 'Community', active: activeTab === 'community', onClick: () => setActiveTab('community') }
   ];
@@ -237,6 +247,350 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
 
       case 'training':
         return <TrainingSystem user={user} />;
+
+      case 'tracking':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Vehicle Tracking</h2>
+              <p className="text-gray-600">Track your assigned vehicle and optimize routes</p>
+            </div>
+            <VehicleTracker userRole="worker" />
+          </div>
+        );
+
+      case 'uber':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Uber for Garbage</h2>
+              <p className="text-gray-600">Handle on-demand waste collection requests</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Assigned Requests"
+                value="5"
+                icon={<Package className="w-6 h-6" />}
+                color="blue"
+              />
+              <StatCard
+                title="Completed Today"
+                value="12"
+                icon={<CheckCircle className="w-6 h-6" />}
+                trend={{ value: "3", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Average Time"
+                value="28 min"
+                icon={<Clock className="w-6 h-6" />}
+                trend={{ value: "5 min", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Rating"
+                value="4.8/5"
+                icon={<Star className="w-6 h-6" />}
+                trend={{ value: "0.1", isPositive: true }}
+                color="yellow"
+              />
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Current Requests</h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {[
+                    {
+                      id: 'UG001',
+                      customer: 'Priya Sharma',
+                      location: 'MG Road, Apt 5B',
+                      type: 'Bulk Waste',
+                      priority: 'High',
+                      distance: '2.3 km',
+                      estimatedTime: '15 min'
+                    },
+                    {
+                      id: 'UG002',
+                      customer: 'Rajesh Kumar',
+                      location: 'Park Street, House 12',
+                      type: 'E-Waste',
+                      priority: 'Medium',
+                      distance: '1.8 km',
+                      estimatedTime: '12 min'
+                    }
+                  ].map((request, index) => (
+                    <div key={index} className="border border-gray-200 rounded-xl p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold text-gray-900">{request.id}</span>
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              request.priority === 'High' 
+                                ? 'bg-red-100 text-red-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {request.priority}
+                            </span>
+                          </div>
+                          <h4 className="font-medium text-gray-900 mb-1">{request.customer}</h4>
+                          <p className="text-sm text-gray-600 mb-1">{request.type}</p>
+                          <p className="text-sm text-gray-500 flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {request.location}
+                          </p>
+                        </div>
+                        <div className="text-right text-sm text-gray-500">
+                          <p>{request.distance}</p>
+                          <p>{request.estimatedTime}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                          Accept
+                        </button>
+                        <button className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                          Navigate
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'digitalid':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Digital ID Card</h2>
+              <p className="text-gray-600">Your unique digital identification</p>
+            </div>
+
+            <div className="max-w-md mx-auto">
+              <div className="bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl p-8 text-white shadow-2xl">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <Users className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold">{user.name}</h3>
+                  <p className="text-green-100">Waste Management Worker</p>
+                </div>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between">
+                    <span className="text-green-100">Worker ID:</span>
+                    <span className="font-semibold">W{user.id.slice(-4)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-green-100">Department:</span>
+                    <span className="font-semibold">Zone A</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-green-100">Valid Until:</span>
+                    <span className="font-semibold">Dec 2024</span>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <div className="w-24 h-24 bg-white rounded-lg mx-auto flex items-center justify-center mb-2">
+                    <QrCode className="w-16 h-16 text-gray-800" />
+                  </div>
+                  <p className="text-xs text-green-100">Scan for verification</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-md mx-auto">
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">ID Card Features</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Unique QR code for instant verification</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Digital signature and security features</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Works offline for field verification</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Linked to attendance and performance data</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'language':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Language Settings</h2>
+              <p className="text-gray-600">Choose your preferred language for the app</p>
+            </div>
+
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">Available Languages</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { code: 'en', name: 'English', native: 'English', flag: '🇺🇸', selected: true },
+                    { code: 'hi', name: 'Hindi', native: 'हिंदी', flag: '🇮🇳', selected: false },
+                    { code: 'mr', name: 'Marathi', native: 'मराठी', flag: '🇮🇳', selected: false },
+                    { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી', flag: '🇮🇳', selected: false },
+                    { code: 'ta', name: 'Tamil', native: 'தமிழ்', flag: '🇮🇳', selected: false },
+                    { code: 'te', name: 'Telugu', native: 'తెలుగు', flag: '🇮🇳', selected: false }
+                  ].map((language, index) => (
+                    <button
+                      key={index}
+                      className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                        language.selected
+                          ? 'border-green-500 bg-green-50'
+                          : 'border-gray-200 hover:border-gray-300 bg-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{language.flag}</span>
+                        <div>
+                          <p className="font-medium text-gray-900">{language.name}</p>
+                          <p className="text-sm text-gray-600">{language.native}</p>
+                        </div>
+                        {language.selected && (
+                          <CheckCircle className="w-5 h-5 text-green-500 ml-auto" />
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-start gap-3">
+                    <Globe className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-blue-900 mb-1">Voice-to-Text Support</h4>
+                      <p className="text-sm text-blue-800">
+                        Voice commands and dictation are available in Hindi and Marathi for easier task reporting.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'penalties':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">My Penalties</h2>
+              <p className="text-gray-600">View your penalty history and current status</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Penalties"
+                value="2"
+                icon={<AlertTriangle className="w-6 h-6" />}
+                color="red"
+              />
+              <StatCard
+                title="This Month"
+                value="0"
+                icon={<Calendar className="w-6 h-6" />}
+                color="green"
+              />
+              <StatCard
+                title="Amount Owed"
+                value="₹0"
+                icon={<CreditCard className="w-6 h-6" />}
+                color="green"
+              />
+              <StatCard
+                title="Performance Score"
+                value="92%"
+                icon={<Star className="w-6 h-6" />}
+                trend={{ value: "5%", isPositive: true }}
+                color="blue"
+              />
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Penalty History</h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {[
+                    {
+                      id: 'P001',
+                      type: 'Late Arrival',
+                      date: '2024-01-10',
+                      amount: '₹300',
+                      status: 'Paid',
+                      description: 'Arrived 30 minutes late for shift'
+                    },
+                    {
+                      id: 'P002',
+                      type: 'Missed Collection',
+                      date: '2024-01-05',
+                      amount: '₹500',
+                      status: 'Paid',
+                      description: 'Failed to collect from 3 scheduled stops'
+                    }
+                  ].map((penalty, index) => (
+                    <div key={index} className="border border-gray-200 rounded-xl p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold text-gray-900">{penalty.id}</span>
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              penalty.status === 'Paid' 
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {penalty.status}
+                            </span>
+                          </div>
+                          <h4 className="font-medium text-gray-900 mb-1">{penalty.type}</h4>
+                          <p className="text-sm text-gray-600">{penalty.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-red-600">{penalty.amount}</p>
+                          <p className="text-sm text-gray-500">{penalty.date}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600" />
+                    <div>
+                      <h4 className="font-semibold text-green-900">Great Performance!</h4>
+                      <p className="text-sm text-green-800">
+                        You have no pending penalties. Keep up the excellent work!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
 
       case 'attendance':
         return (

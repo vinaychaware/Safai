@@ -14,12 +14,16 @@ import {
   Target,
   TrendingUp,
   CheckCircle,
-  Zap
+  Zap,
+  Globe,
+  Activity
 } from 'lucide-react';
 import { User } from '../../App';
 import Layout from '../common/Layout';
 import StatCard from '../common/StatCard';
 import TrainingSystem from '../training/TrainingSystem';
+import VehicleTracker from '../common/VehicleTracker';
+import HeatMap from '../common/HeatMap';
 
 interface CitizenDashboardProps {
   user: User;
@@ -37,7 +41,8 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
     { icon: <Calendar className="w-5 h-5" />, label: 'On-Demand Service', active: activeTab === 'ondemand', onClick: () => setActiveTab('ondemand') },
     { icon: <Award className="w-5 h-5" />, label: 'Rewards', active: activeTab === 'rewards', onClick: () => setActiveTab('rewards') },
     { icon: <GraduationCap className="w-5 h-5" />, label: 'Training', active: activeTab === 'training', onClick: () => setActiveTab('training') },
-    { icon: <MapPin className="w-5 h-5" />, label: 'Area Map', active: activeTab === 'map', onClick: () => setActiveTab('map') }
+    { icon: <MapPin className="w-5 h-5" />, label: 'Area Map', active: activeTab === 'map', onClick: () => setActiveTab('map') },
+    { icon: <Activity className="w-5 h-5" />, label: 'Analytics', active: activeTab === 'analytics', onClick: () => setActiveTab('analytics') }
   ];
 
   const renderContent = () => {
@@ -271,6 +276,203 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
 
       case 'training':
         return <TrainingSystem user={user} />;
+
+      case 'tracking':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Vehicle Tracking</h2>
+              <p className="text-gray-600">Track garbage collection vehicles in real-time</p>
+            </div>
+            <VehicleTracker userRole="citizen" />
+          </div>
+        );
+
+      case 'map':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Area Cleanliness Map</h2>
+              <p className="text-gray-600">View cleanliness status of different areas</p>
+            </div>
+            <HeatMap />
+          </div>
+        );
+
+      case 'analytics':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">My Analytics</h2>
+              <p className="text-gray-600">Track your environmental impact and contributions</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Reports Submitted"
+                value="12"
+                icon={<ClipboardList className="w-6 h-6" />}
+                trend={{ value: "2", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Issues Resolved"
+                value="10"
+                icon={<CheckCircle className="w-6 h-6" />}
+                trend={{ value: "1", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Environmental Impact"
+                value="85 kg"
+                icon={<Globe className="w-6 h-6" />}
+                trend={{ value: "12 kg", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Community Rank"
+                value="#23"
+                icon={<Award className="w-6 h-6" />}
+                trend={{ value: "5", isPositive: true }}
+                color="yellow"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Monthly Activity</h3>
+                <div className="space-y-4">
+                  {[
+                    { month: 'January', reports: 4, resolved: 3, points: 150 },
+                    { month: 'December', reports: 3, resolved: 3, points: 120 },
+                    { month: 'November', reports: 5, resolved: 4, points: 180 }
+                  ].map((month, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">{month.month}</p>
+                        <p className="text-sm text-gray-600">{month.reports} reports, {month.resolved} resolved</p>
+                      </div>
+                      <span className="font-semibold text-green-600">{month.points} pts</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Area Performance</h3>
+                <div className="space-y-4">
+                  <div className="text-center p-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-xl">
+                    <div className="text-4xl font-bold text-green-600 mb-2">8.5/10</div>
+                    <p className="text-gray-700 font-medium">Your Area Score</p>
+                    <p className="text-sm text-gray-600 mt-1">Above city average (7.8)</p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Waste Collection</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div className="bg-green-500 h-2 rounded-full" style={{ width: '90%' }}></div>
+                        </div>
+                        <span className="text-sm font-semibold text-green-600">90%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Cleanliness</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div className="bg-blue-500 h-2 rounded-full" style={{ width: '85%' }}></div>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600">85%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Citizen Participation</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div className="bg-purple-500 h-2 rounded-full" style={{ width: '78%' }}></div>
+                        </div>
+                        <span className="text-sm font-semibold text-purple-600">78%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'rewards':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Rewards & Points</h2>
+              <p className="text-gray-600">Track your points and redeem rewards</p>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-8 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Your Reward Points</h3>
+                  <p className="text-purple-100">Keep earning by reporting issues and participating!</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-4xl font-bold">450</div>
+                  <div className="text-purple-100">Total Points</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Available Rewards</h3>
+                <div className="space-y-4">
+                  {[
+                    { reward: 'Shopping Voucher ₹100', cost: '200 points', available: true },
+                    { reward: 'Movie Ticket', cost: '300 points', available: true },
+                    { reward: 'Eco-friendly Kit', cost: '500 points', available: false },
+                    { reward: 'Restaurant Voucher ₹500', cost: '800 points', available: false }
+                  ].map((reward, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">{reward.reward}</p>
+                        <p className="text-sm text-gray-600">{reward.cost}</p>
+                      </div>
+                      <button 
+                        className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                          reward.available 
+                            ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        }`}
+                        disabled={!reward.available}
+                      >
+                        {reward.available ? 'Redeem' : 'Locked'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">How to Earn Points</h3>
+                <div className="space-y-3">
+                  {[
+                    { activity: 'Report waste issue', points: '+25 points' },
+                    { activity: 'Complete training module', points: '+50 points' },
+                    { activity: 'Verify issue resolution', points: '+15 points' },
+                    { activity: 'Participate in cleanup', points: '+100 points' },
+                    { activity: 'Refer a friend', points: '+75 points' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span className="text-gray-700">{item.activity}</span>
+                      <span className="font-semibold text-green-600">{item.points}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
 
       case 'ondemand':
         return (
