@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, AlertTriangle, CheckCircle, TrendingUp, Filter, Clock } from 'lucide-react';
+import { MapPin, AlertTriangle, CheckCircle,  Filter } from 'lucide-react';
 
 interface HeatMapProps {
   data?: Array<{
@@ -48,14 +48,6 @@ const HeatMap: React.FC<HeatMapProps> = ({ data = [] }) => {
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'clean': return 'Clean Zone';
-      case 'moderate': return 'Moderate Issues';
-      case 'critical': return 'Critical Zone';
-      default: return 'Unknown';
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -67,7 +59,7 @@ const HeatMap: React.FC<HeatMapProps> = ({ data = [] }) => {
             <Filter className="w-5 h-5 text-gray-500" />
             <select 
               value={filter}
-              onChange={(e) => setFilter(e.target.value as any)}
+              onChange={(e) => setFilter(e.target.value as never)}
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
             >
               <option value="all">All Areas</option>

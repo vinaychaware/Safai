@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  ClipboardList, 
-  MapPin, 
-  Truck, 
-  Star, 
+import {
+  ClipboardList,
+  MapPin,
+  Truck,
+  Star,
   GraduationCap,
   Bell,
   Award,
@@ -11,8 +11,7 @@ import {
   Camera,
   Clock,
   Calendar,
-  Target,
-  TrendingUp,
+
   CheckCircle,
   Zap,
   Globe,
@@ -100,13 +99,12 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                         <p className="font-medium text-gray-900">{report.issue}</p>
                         <p className="text-sm text-gray-500">{report.id} • {report.date}</p>
                       </div>
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        report.status === 'Resolved' 
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${report.status === 'Resolved'
                           ? 'bg-green-100 text-green-800'
                           : report.status === 'In Progress'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}>
                         {report.status}
                       </span>
                     </div>
@@ -125,7 +123,7 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                     <p className="text-green-700">Tomorrow at 8:00 AM</p>
                     <p className="text-sm text-green-600">Vehicle will arrive in your area</p>
                   </div>
-                  
+
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div className="flex items-center gap-3 mb-2">
                       <Clock className="w-5 h-5 text-blue-600" />
@@ -185,8 +183,8 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Location
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-200"
                     placeholder="Enter location or use current location"
                   />
@@ -196,7 +194,7 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Description
                   </label>
-                  <textarea 
+                  <textarea
                     rows={4}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-200"
                     placeholder="Describe the issue in detail"
@@ -237,6 +235,142 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
               <p className="text-gray-600">Track garbage collection vehicles in real-time</p>
             </div>
             <VehicleTracker userRole="citizen" />
+          </div>
+        );
+
+      case 'booking':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Book Collection</h2>
+              <p className="text-gray-600">
+                Request waste collection and track your booking history
+              </p>
+            </div>
+
+            {/* Booking Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Bookings"
+                value="145"
+                icon={<Bell className="w-6 h-6" />}
+                trend={{ value: "12%", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Completed"
+                value="132"
+                icon={<CheckCircle className="w-6 h-6" />}
+                trend={{ value: "8%", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Pending"
+                value="10"
+                icon={<Clock className="w-6 h-6" />}
+                trend={{ value: "3", isPositive: false }}
+                color="yellow"
+              />
+              <StatCard
+                title="Scheduled Today"
+                value="6"
+                icon={<Calendar className="w-6 h-6" />}
+                trend={{ value: "2", isPositive: true }}
+                color="purple"
+              />
+            </div>
+
+            {/* Request Collection Form */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Request New Collection</h3>
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Address</label>
+                  <input
+                    type="text"
+                    placeholder="Enter your address"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label>
+                    <input
+                      type="date"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Time</label>
+                    <input
+                      type="time"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Type of Waste</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500">
+                    <option>Organic</option>
+                    <option>Recyclable</option>
+                    <option>Hazardous</option>
+                    <option>Mixed</option>
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
+                >
+                  Submit Request
+                </button>
+              </form>
+            </div>
+
+            {/* Recent Bookings */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Recent Bookings</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Booking ID</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waste Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      { id: 'B001', address: '12 Market Rd, Ward 8', type: 'Organic', status: 'Completed', date: '2025-09-25' },
+                      { id: 'B002', address: '44 Green Park, Ward 12', type: 'Recyclable', status: 'Pending', date: '2025-09-24' },
+                      { id: 'B003', address: '88 Industrial Zone C', type: 'Hazardous', status: 'Scheduled', date: '2025-09-23' },
+                    ].map((b, i) => (
+                      <tr key={i} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{b.id}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{b.address}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{b.type}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${b.status === 'Completed'
+                                ? 'bg-green-100 text-green-800'
+                                : b.status === 'Pending'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}
+                          >
+                            {b.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{b.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         );
 
@@ -321,7 +455,7 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                     <p className="text-gray-700 font-medium">Your Area Score</p>
                     <p className="text-sm text-gray-600 mt-1">Above city average (7.8)</p>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Waste Collection</span>
@@ -393,12 +527,11 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                         <p className="font-medium text-gray-900">{reward.reward}</p>
                         <p className="text-sm text-gray-600">{reward.cost}</p>
                       </div>
-                      <button 
-                        className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                          reward.available 
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                      <button
+                        className={`px-4 py-2 rounded-lg text-sm font-medium ${reward.available
+                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
                             : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        }`}
+                          }`}
                         disabled={!reward.available}
                       >
                         {reward.available ? 'Redeem' : 'Locked'}
@@ -469,7 +602,7 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
 
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Book Collection Service</h3>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
@@ -506,7 +639,7 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Pickup Address
                     </label>
-                    <textarea 
+                    <textarea
                       rows={3}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-200"
                       placeholder="Enter your complete address"
@@ -580,11 +713,10 @@ const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user, onLogout }) =
                         <p className="text-sm text-gray-500">Booked on {booking.date}</p>
                       </div>
                       <div className="text-right">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          booking.status === 'Completed' 
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${booking.status === 'Completed'
                             ? 'bg-green-100 text-green-800'
                             : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                          }`}>
                           {booking.status}
                         </span>
                         <p className="text-sm font-medium text-gray-900 mt-1">{booking.cost}</p>

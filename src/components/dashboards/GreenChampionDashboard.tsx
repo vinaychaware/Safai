@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { 
-  Award, 
-  MapPin, 
-  Trophy, 
-  Star, 
-  Users, 
+import {
+  Award,
+  MapPin,
+  Trophy,
+  Star,
+  Users,
   ClipboardList,
   GraduationCap,
   BarChart3,
-  Target,
-  Zap,
   TrendingUp,
   CheckCircle,
   Camera,
   Shield,
   Activity,
-  Globe
+  Globe,
+  UserCheck,
+  MessageSquare,
+  Calendar
 } from 'lucide-react';
 import { User } from '../../App';
 import Layout from '../common/Layout';
@@ -118,12 +119,11 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
                         <p className="font-medium text-gray-900">{reward.reward}</p>
                         <p className="text-sm text-gray-500">{reward.cost}</p>
                       </div>
-                      <button 
-                        className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                          reward.available 
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200' 
-                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        }`}
+                      <button
+                        className={`px-4 py-2 rounded-lg text-sm font-medium ${reward.available
+                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          }`}
                         disabled={!reward.available}
                       >
                         {reward.available ? 'Redeem' : 'Locked'}
@@ -198,6 +198,160 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
           </div>
         );
 
+      case 'report':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Report Issues</h2>
+              <p className="text-gray-600">
+                Submit and track issues reported by citizens and workers
+              </p>
+            </div>
+
+            {/* Report Issue Form */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Submit a New Issue</h3>
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., Garbage overflow in Ward 12"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    placeholder="Describe the issue in detail..."
+                    rows={4}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500"
+                  />
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Category
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500">
+                      <option>Garbage Overflow</option>
+                      <option>Missed Collection</option>
+                      <option>Broken Bin</option>
+                      <option>Vehicle Delay</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ward / Zone / Street"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Upload Photo (optional)
+                  </label>
+                  <input
+                    type="file"
+                    className="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
+                >
+                  Submit Issue
+                </button>
+              </form>
+            </div>
+
+            {/* Recent Issues Table */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Recent Issues</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Title
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Category
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Location
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Reported On
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      {
+                        title: 'Garbage overflow near Market Rd',
+                        category: 'Garbage Overflow',
+                        location: 'Ward 12',
+                        status: 'Open',
+                        date: '2025-09-25',
+                      },
+                      {
+                        title: 'Collection vehicle missed pickup',
+                        category: 'Missed Collection',
+                        location: 'Zone B',
+                        status: 'In Progress',
+                        date: '2025-09-24',
+                      },
+                      {
+                        title: 'Broken bin in park area',
+                        category: 'Broken Bin',
+                        location: 'Ward 7',
+                        status: 'Resolved',
+                        date: '2025-09-23',
+                      },
+                    ].map((issue, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          {issue.title}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{issue.category}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{issue.location}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${issue.status === 'Resolved'
+                              ? 'bg-green-100 text-green-800'
+                              : issue.status === 'In Progress'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-red-100 text-red-800'
+                              }`}
+                          >
+                            {issue.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{issue.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
       case 'training':
         return <TrainingSystem user={user} />;
 
@@ -261,9 +415,8 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
                   { rank: 6, name: 'Amit Verma', points: '2,520', area: 'Zone B', badge: '6️⃣', verified: false },
                   { rank: 7, name: 'You', points: '2,450', area: 'Zone C', badge: '7️⃣', verified: true, isUser: true }
                 ].map((champion, index) => (
-                  <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${
-                    champion.isUser ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
-                  }`}>
+                  <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${champion.isUser ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                    }`}>
                     <div className="flex items-center gap-4">
                       <span className="text-2xl">{champion.badge}</span>
                       <div>
@@ -272,7 +425,9 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
                             {champion.name}
                           </p>
                           {champion.verified && (
-                            <Shield className="w-4 h-4 text-blue-500" title="Verified Champion" />
+                            <span title="Verified Champion">
+                              <Shield className="w-4 h-4 text-blue-500" />
+                            </span>
                           )}
                         </div>
                         <p className="text-sm text-gray-600">{champion.area}</p>
@@ -441,7 +596,7 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
                     <p className="text-gray-700 font-medium">Your Area Score</p>
                     <p className="text-sm text-gray-600 mt-1">Improved by 0.8 since you joined</p>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Issues Resolved</span>
@@ -578,7 +733,7 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
                           </div>
                         )}
                       </div>
-                      
+
                       <div className="flex gap-3">
                         <button className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors">
                           ✓ Verify & Approve
@@ -597,6 +752,135 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
             </div>
           </div>
         );
+
+      case 'community':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Community</h2>
+              <p className="text-gray-600">
+                Connect with citizens, green champions, and workers in your area
+              </p>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Members"
+                value="12,450"
+                icon={<Users className="w-6 h-6" />}
+                trend={{ value: "4%", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Active This Week"
+                value="4,230"
+                icon={<UserCheck className="w-6 h-6" />}
+                trend={{ value: "2%", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Discussions"
+                value="320"
+                icon={<MessageSquare className="w-6 h-6" />}
+                trend={{ value: "12%", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Events"
+                value="28"
+                icon={<Calendar className="w-6 h-6" />}
+                trend={{ value: "6%", isPositive: true }}
+                color="yellow"
+              />
+            </div>
+
+            {/* Member Directory */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Member Directory</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Role
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Ward / Zone
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Joined
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      { name: 'Aarav Gupta', role: 'Citizen', ward: 'Ward 12', joined: '2025-09-25' },
+                      { name: 'Neha Sharma', role: 'Green Champion', ward: 'Ward 8', joined: '2025-09-22' },
+                      { name: 'Rohit Mehta', role: 'Worker', ward: 'Zone B', joined: '2025-09-20' },
+                      { name: 'Isha Rao', role: 'Citizen', ward: 'Ward 7', joined: '2025-09-18' },
+                    ].map((member, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          {member.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{member.role}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{member.ward}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{member.joined}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Recent Discussions */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Discussions</h3>
+              <div className="space-y-4">
+                {[
+                  {
+                    title: 'Garbage collection timing in Ward 12',
+                    author: 'Aarav Gupta',
+                    replies: 8,
+                    date: '2025-09-25',
+                  },
+                  {
+                    title: 'Ideas for plastic-free events',
+                    author: 'Neha Sharma',
+                    replies: 15,
+                    date: '2025-09-24',
+                  },
+                  {
+                    title: 'Feedback on biogas plant operations',
+                    author: 'Rohit Mehta',
+                    replies: 5,
+                    date: '2025-09-23',
+                  },
+                ].map((post, index) => (
+                  <div
+                    key={index}
+                    className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <h4 className="font-medium text-gray-900">{post.title}</h4>
+                      <span className="text-xs text-gray-500">{post.date}</span>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Started by {post.author} • {post.replies} replies
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
 
       default:
         return (

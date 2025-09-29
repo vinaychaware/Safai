@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  ClipboardList, 
-  Users, 
-  MapPin, 
-  CheckCircle, 
+import {
+  ClipboardList,
+  Users,
+  MapPin,
+  CheckCircle,
   AlertCircle,
   UserCheck,
   GraduationCap,
@@ -12,14 +12,15 @@ import {
   Target,
   Zap,
   TrendingUp,
-  Calendar,
   Award,
   Shield,
   Camera,
-  FileText,
   Package,
   Activity,
-  PieChart
+  PieChart,
+  Clock,
+  Presentation,
+  Calendar
 } from 'lucide-react';
 import { User } from '../../App';
 import Layout from '../common/Layout';
@@ -121,13 +122,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{complaint.location}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{complaint.type}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            complaint.status === 'Resolved' 
-                              ? 'bg-green-100 text-green-800'
-                              : complaint.status === 'In Progress'
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${complaint.status === 'Resolved'
+                            ? 'bg-green-100 text-green-800'
+                            : complaint.status === 'In Progress'
                               ? 'bg-yellow-100 text-yellow-800'
                               : 'bg-red-100 text-red-800'
-                          }`}>
+                            }`}>
                             {complaint.status}
                           </span>
                         </td>
@@ -210,11 +210,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{worker.name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{worker.area}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            worker.status === 'Active' 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
-                          }`}>
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${worker.status === 'Active'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                            }`}>
                             {worker.status}
                           </span>
                         </td>
@@ -232,6 +231,108 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
             </div>
           </div>
         );
+
+      case 'champions':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Green Champions</h2>
+              <p className="text-gray-600">Track contributions and engagement of Green Champions</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Active Champions"
+                value="120"
+                icon={<Users className="w-6 h-6" />}
+                trend={{ value: "6%", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Events Organized"
+                value="34"
+                icon={<Calendar className="w-6 h-6" />}
+                trend={{ value: "12%", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Awareness Sessions"
+                value="89"
+                icon={<Presentation className="w-6 h-6" />}
+                trend={{ value: "9%", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Avg Impact Score"
+                value="91%"
+                icon={<Award className="w-6 h-6" />}
+                trend={{ value: "3%", isPositive: true }}
+                color="yellow"
+              />
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Champion Activity</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Region</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Events</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Impact Score</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      { name: 'Aarav Champion', region: 'Ward 12', status: 'Active', events: '3', impact: '95%' },
+                      { name: 'Neha Champion', region: 'Ward 8', status: 'Active', events: '2', impact: '89%' },
+                      { name: 'Rohit Champion', region: 'Ward 15', status: 'Inactive', events: '0', impact: '70%' }
+                    ].map((champion, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {champion.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {champion.region}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${champion.status === 'Active'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                              }`}
+                          >
+                            {champion.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {champion.events}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {champion.impact}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                            View
+                          </button>
+                          <button className="text-green-600 hover:text-green-900">
+                            Assign Event
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
 
       case 'training':
         return <TrainingSystem user={user} />;
@@ -351,7 +452,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                           </div>
                         )}
                       </div>
-                      
+
                       <div className="flex gap-3">
                         <button className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors">
                           ✓ Approve
@@ -437,13 +538,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.location}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.type}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            request.status === 'In Progress' 
-                              ? 'bg-blue-100 text-blue-800'
-                              : request.status === 'Assigned'
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${request.status === 'In Progress'
+                            ? 'bg-blue-100 text-blue-800'
+                            : request.status === 'Assigned'
                               ? 'bg-green-100 text-green-800'
                               : 'bg-yellow-100 text-yellow-800'
-                          }`}>
+                            }`}>
                             {request.status}
                           </span>
                         </td>
@@ -523,11 +623,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{worker.deductions}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{worker.net}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            worker.status === 'Paid' 
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                          }`}>
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${worker.status === 'Paid'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                            }`}>
                             {worker.status}
                           </span>
                         </td>
@@ -592,12 +691,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                     <div key={index} className="p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-medium text-gray-900">{zone.area}</h4>
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          zone.color === 'green' ? 'bg-green-100 text-green-800' :
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${zone.color === 'green' ? 'bg-green-100 text-green-800' :
                           zone.color === 'blue' ? 'bg-blue-100 text-blue-800' :
-                          zone.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
+                            zone.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-red-100 text-red-800'
+                          }`}>
                           {zone.score}/10
                         </span>
                       </div>
@@ -767,6 +865,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                 title="Pending Claims"
                 value="230"
                 icon={<Clock className="w-6 h-6" />}
+                trend={{ value: "-12", isPositive: false }}   
                 color="yellow"
               />
               <StatCard
@@ -806,11 +905,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{voucher.type}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{voucher.value}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            voucher.status === 'Claimed' 
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${voucher.status === 'Claimed'
                               ? 'bg-green-100 text-green-800'
                               : 'bg-yellow-100 text-yellow-800'
-                          }`}>
+                            }`}>
                             {voucher.status}
                           </span>
                         </td>

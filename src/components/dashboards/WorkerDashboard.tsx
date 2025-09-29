@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { 
-  ClipboardList, 
-  Camera, 
-  MapPin, 
-  Award, 
+import {
+  ClipboardList,
+  Camera,
+  MapPin,
+  Award,
   GraduationCap,
   Truck,
   Users,
   BarChart3,
   CheckCircle,
   Clock,
-  Navigation,
   Mic,
   CreditCard,
   AlertTriangle,
@@ -18,12 +17,13 @@ import {
   Target,
   Zap,
   QrCode,
-  Play,
-  FileText,
   Globe,
   Package,
-  Activity
+  Calendar,
+  UserCheck,
+  MessageSquare,
 } from 'lucide-react';
+
 import { User } from '../../App';
 import Layout from '../common/Layout';
 import StatCard from '../common/StatCard';
@@ -98,35 +98,35 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
               <div className="p-6">
                 <div className="space-y-4">
                   {[
-                    { 
-                      id: 'T001', 
-                      location: 'MG Road - Bin #45', 
-                      type: 'Overflowing Bin', 
-                      priority: 'High', 
+                    {
+                      id: 'T001',
+                      location: 'MG Road - Bin #45',
+                      type: 'Overflowing Bin',
+                      priority: 'High',
                       status: 'Completed',
                       time: '09:30 AM'
                     },
-                    { 
-                      id: 'T002', 
-                      location: 'Park Street - Area 12', 
-                      type: 'Illegal Dumping', 
-                      priority: 'Medium', 
+                    {
+                      id: 'T002',
+                      location: 'Park Street - Area 12',
+                      type: 'Illegal Dumping',
+                      priority: 'Medium',
                       status: 'Completed',
                       time: '11:15 AM'
                     },
-                    { 
-                      id: 'T003', 
-                      location: 'Main Square - Bin #78', 
-                      type: 'Missed Collection', 
-                      priority: 'High', 
+                    {
+                      id: 'T003',
+                      location: 'Main Square - Bin #78',
+                      type: 'Missed Collection',
+                      priority: 'High',
                       status: 'In Progress',
                       time: '02:00 PM'
                     },
-                    { 
-                      id: 'T004', 
-                      location: 'City Center - Area 5', 
-                      type: 'Cleaning Required', 
-                      priority: 'Low', 
+                    {
+                      id: 'T004',
+                      location: 'City Center - Area 5',
+                      type: 'Cleaning Required',
+                      priority: 'Low',
                       status: 'Pending',
                       time: '03:30 PM'
                     }
@@ -135,23 +135,21 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <span className="font-semibold text-gray-900">{task.id}</span>
-                          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                            task.priority === 'High' 
-                              ? 'bg-red-100 text-red-800'
-                              : task.priority === 'Medium'
+                          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${task.priority === 'High'
+                            ? 'bg-red-100 text-red-800'
+                            : task.priority === 'Medium'
                               ? 'bg-yellow-100 text-yellow-800'
                               : 'bg-green-100 text-green-800'
-                          }`}>
+                            }`}>
                             {task.priority}
                           </span>
                         </div>
-                        <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
-                          task.status === 'Completed' 
-                            ? 'bg-green-100 text-green-800'
-                            : task.status === 'In Progress'
+                        <span className={`px-3 py-1 text-sm font-semibold rounded-full ${task.status === 'Completed'
+                          ? 'bg-green-100 text-green-800'
+                          : task.status === 'In Progress'
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-gray-100 text-gray-800'
-                        }`}>
+                          }`}>
                           {task.status}
                         </span>
                       </div>
@@ -193,7 +191,7 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
 
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Current Task: Main Square - Bin #78</h3>
-              
+
               <div className="space-y-6">
                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
                   <Camera className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -201,8 +199,8 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                   <p className="text-gray-600 mb-4">Capture a geo-tagged photo of the completed work</p>
                   <div className="flex gap-3 justify-center">
                     <button className="bg-green-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-600 transition-colors">
-                    Open Camera
-                  </button>
+                      Open Camera
+                    </button>
                     <button className="bg-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors flex items-center gap-2">
                       <Mic className="w-5 h-5" />
                       Voice Note
@@ -220,7 +218,7 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                       <li>• Include before/after if applicable</li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-gray-50 rounded-xl p-4">
                     <h5 className="font-semibold text-gray-900 mb-2">Task Details</h5>
                     <div className="text-sm text-gray-600 space-y-1">
@@ -247,6 +245,137 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
 
       case 'training':
         return <TrainingSystem user={user} />;
+
+      case 'routes':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Route Map</h2>
+              <p className="text-gray-600">
+                Visualize collection routes, assigned workers, and daily coverage
+              </p>
+            </div>
+
+            {/* Route Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Routes"
+                value="36"
+                icon={<MapPin className="w-6 h-6" />}
+                trend={{ value: "3", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Active Today"
+                value="28"
+                icon={<Truck className="w-6 h-6" />}
+                trend={{ value: "2", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Completed"
+                value="19"
+                icon={<CheckCircle className="w-6 h-6" />}
+                trend={{ value: "5", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Pending"
+                value="9"
+                icon={<Clock className="w-6 h-6" />}
+                trend={{ value: "1", isPositive: false }}
+                color="yellow"
+              />
+            </div>
+
+            {/* Map Placeholder */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Route Map</h3>
+              <div className="h-80 flex items-center justify-center border border-dashed border-gray-300 rounded-lg text-gray-500">
+                {/* Replace this with your actual map component (Leaflet, Google Maps, Mapbox, etc.) */}
+                Map view goes here
+              </div>
+            </div>
+
+            {/* Route List */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Routes Overview</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Route ID
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Area Covered
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Assigned Worker
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Last Updated
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      {
+                        id: 'R001',
+                        area: 'Ward 12 – Market Road',
+                        worker: 'John Worker',
+                        status: 'In Progress',
+                        updated: '09:45 AM',
+                      },
+                      {
+                        id: 'R002',
+                        area: 'Ward 8 – Green Park',
+                        worker: 'Sarah Worker',
+                        status: 'Completed',
+                        updated: '08:20 AM',
+                      },
+                      {
+                        id: 'R003',
+                        area: 'Zone C – Industrial Layout',
+                        worker: 'Mike Worker',
+                        status: 'Pending',
+                        updated: '—',
+                      },
+                    ].map((route, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          {route.id}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{route.area}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{route.worker}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${route.status === 'Completed'
+                              ? 'bg-green-100 text-green-800'
+                              : route.status === 'In Progress'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-red-100 text-red-800'
+                              }`}
+                          >
+                            {route.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{route.updated}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
+
 
       case 'tracking':
         return (
@@ -328,11 +457,10 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-semibold text-gray-900">{request.id}</span>
-                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              request.priority === 'High' 
-                                ? 'bg-red-100 text-red-800'
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${request.priority === 'High'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                              }`}>
                               {request.priority}
                             </span>
                           </div>
@@ -443,7 +571,7 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
             <div className="max-w-2xl mx-auto">
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
                 <h3 className="text-xl font-semibold text-gray-900 mb-6">Available Languages</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
                     { code: 'en', name: 'English', native: 'English', flag: '🇺🇸', selected: true },
@@ -455,11 +583,10 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                   ].map((language, index) => (
                     <button
                       key={index}
-                      className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${
-                        language.selected
-                          ? 'border-green-500 bg-green-50'
-                          : 'border-gray-200 hover:border-gray-300 bg-white'
-                      }`}
+                      className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${language.selected
+                        ? 'border-green-500 bg-green-50'
+                        : 'border-gray-200 hover:border-gray-300 bg-white'
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{language.flag}</span>
@@ -504,18 +631,21 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                 title="Total Penalties"
                 value="2"
                 icon={<AlertTriangle className="w-6 h-6" />}
+                trend={{ value: "0", isPositive: false }}   // added
                 color="red"
               />
               <StatCard
                 title="This Month"
                 value="0"
                 icon={<Calendar className="w-6 h-6" />}
+                trend={{ value: "-1", isPositive: true }}   // added
                 color="green"
               />
               <StatCard
                 title="Amount Owed"
                 value="₹0"
                 icon={<CreditCard className="w-6 h-6" />}
+                trend={{ value: "-₹800", isPositive: true }} // added
                 color="green"
               />
               <StatCard
@@ -556,11 +686,10 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-semibold text-gray-900">{penalty.id}</span>
-                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              penalty.status === 'Paid' 
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
-                            }`}>
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${penalty.status === 'Paid'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                              }`}>
                               {penalty.status}
                             </span>
                           </div>
@@ -632,7 +761,7 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
 
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Today's Check-in</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="text-center">
                   <div className="w-48 h-48 bg-gray-100 rounded-2xl mx-auto mb-4 flex items-center justify-center">
@@ -744,12 +873,11 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-green-600">{reward.value}</p>
-                        <button 
-                          className={`mt-1 px-3 py-1 text-xs font-medium rounded-full ${
-                            reward.available 
-                              ? 'bg-green-100 text-green-700 hover:bg-green-200' 
-                              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                          }`}
+                        <button
+                          className={`mt-1 px-3 py-1 text-xs font-medium rounded-full ${reward.available
+                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            }`}
                           disabled={!reward.available}
                         >
                           {reward.available ? 'Claim' : 'Locked'}
@@ -769,9 +897,8 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                     { rank: 3, name: 'You', score: '92%', badge: '🥉', isUser: true },
                     { rank: 4, name: 'John Cleaner', score: '89%', badge: '4️⃣' }
                   ].map((worker, index) => (
-                    <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${
-                      worker.isUser ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
-                    }`}>
+                    <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${worker.isUser ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                      }`}>
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{worker.badge}</span>
                         <div>
@@ -785,6 +912,102 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'community':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Community</h2>
+              <p className="text-gray-600">Connect with citizens, green champions, and workers in your area</p>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Members"
+                value="12,450"
+                icon={<Users className="w-6 h-6" />}
+                trend={{ value: "4%", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Active This Week"
+                value="4,230"
+                icon={<UserCheck className="w-6 h-6" />}
+                trend={{ value: "2%", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Discussions"
+                value="320"
+                icon={<MessageSquare className="w-6 h-6" />}
+                trend={{ value: "12%", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Events"
+                value="28"
+                icon={<Calendar className="w-6 h-6" />}
+                trend={{ value: "6%", isPositive: true }}
+                color="yellow"
+              />
+            </div>
+
+            {/* Member Directory */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Member Directory</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ward / Zone</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {[
+                      { name: 'Aarav Gupta', role: 'Citizen', ward: 'Ward 12', joined: '2025-09-25' },
+                      { name: 'Neha Sharma', role: 'Green Champion', ward: 'Ward 8', joined: '2025-09-22' },
+                      { name: 'Rohit Mehta', role: 'Worker', ward: 'Zone B', joined: '2025-09-20' },
+                      { name: 'Isha Rao', role: 'Citizen', ward: 'Ward 7', joined: '2025-09-18' },
+                    ].map((m, i) => (
+                      <tr key={i} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{m.name}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{m.role}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{m.ward}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{m.joined}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Recent Discussions */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Discussions</h3>
+              <div className="space-y-4">
+                {[
+                  { title: 'Garbage collection timing in Ward 12', author: 'Aarav Gupta', replies: 8, date: '2025-09-25' },
+                  { title: 'Ideas for plastic-free events', author: 'Neha Sharma', replies: 15, date: '2025-09-24' },
+                  { title: 'Feedback on biogas plant operations', author: 'Rohit Mehta', replies: 5, date: '2025-09-23' },
+                ].map((post, i) => (
+                  <div key={i} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <div className="flex items-center justify-between mb-1">
+                      <h4 className="font-medium text-gray-900">{post.title}</h4>
+                      <span className="text-xs text-gray-500">{post.date}</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Started by {post.author} • {post.replies} replies</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

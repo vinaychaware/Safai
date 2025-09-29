@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  BarChart3, 
-  Users, 
-  MapPin, 
-  Award, 
-  TrendingUp, 
+import {
+  BarChart3,
+  Users,
+  MapPin,
+  Award,
+  TrendingUp,
   AlertTriangle,
   ShoppingCart,
   Recycle,
@@ -17,13 +17,12 @@ import {
   Zap,
   Globe,
   Shield,
-  Database,
   Calendar,
   Package,
   Truck,
-  Building,
-  PieChart,
-  Activity
+  Activity,
+  Clock,
+  Star
 } from 'lucide-react';
 import { User } from '../../App';
 import Layout from '../common/Layout';
@@ -241,11 +240,10 @@ const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ user, onLogou
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{admin.email}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{admin.area}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            admin.status === 'Active' 
-                              ? 'bg-green-100 text-green-800' 
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${admin.status === 'Active'
+                              ? 'bg-green-100 text-green-800'
                               : 'bg-red-100 text-red-800'
-                          }`}>
+                            }`}>
                             {admin.status}
                           </span>
                         </td>
@@ -425,13 +423,12 @@ const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ user, onLogou
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.schedule}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.participants}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            campaign.status === 'Active' 
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${campaign.status === 'Active'
                               ? 'bg-green-100 text-green-800'
                               : campaign.status === 'Scheduled'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}>
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}>
                             {campaign.status}
                           </span>
                         </td>
@@ -520,13 +517,12 @@ const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ user, onLogou
                     <div key={index} className="p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-medium text-gray-900">{equipment.item}</h4>
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          equipment.status === 'Good' 
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${equipment.status === 'Good'
                             ? 'bg-green-100 text-green-800'
                             : equipment.status === 'Fair'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}>
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
                           {equipment.status}
                         </span>
                       </div>
@@ -608,13 +604,12 @@ const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ user, onLogou
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{penalty.type}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{penalty.amount}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            penalty.status === 'Paid' 
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${penalty.status === 'Paid'
                               ? 'bg-green-100 text-green-800'
                               : penalty.status === 'Pending'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-blue-100 text-blue-800'
-                          }`}>
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-blue-100 text-blue-800'
+                            }`}>
                             {penalty.status}
                           </span>
                         </td>
@@ -797,11 +792,10 @@ const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ user, onLogou
                     <div key={index} className="p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-medium text-gray-900">{campaign.name}</h4>
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          campaign.status === 'Active' 
-                            ? 'bg-green-100 text-green-800' 
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${campaign.status === 'Active'
+                            ? 'bg-green-100 text-green-800'
                             : 'bg-blue-100 text-blue-800'
-                        }`}>
+                          }`}>
                           {campaign.status}
                         </span>
                       </div>
@@ -901,11 +895,10 @@ const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ user, onLogou
                     <div key={index} className="p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-medium text-gray-900">{facility.name}</h4>
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          facility.status === 'Operational' 
-                            ? 'bg-green-100 text-green-800' 
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${facility.status === 'Operational'
+                            ? 'bg-green-100 text-green-800'
                             : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                          }`}>
                           {facility.status}
                         </span>
                       </div>
@@ -920,6 +913,224 @@ const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ user, onLogou
             </div>
           </div>
         );
+
+      case 'users':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">User Analytics</h2>
+              <p className="text-gray-600">Key metrics and insights about your user base</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Users"
+                value="128,940"
+                icon={<Users className="w-6 h-6" />}
+                trend={{ value: "4.2%", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Active Users (30d)"
+                value="62,310"
+                icon={<Activity className="w-6 h-6" />}
+                trend={{ value: "2.1%", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="New Signups"
+                value="3,482"
+                icon={<UserPlus className="w-6 h-6" />}
+                trend={{ value: "8.9%", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Churn Rate"
+                value="3.7%"
+                icon={<AlertTriangle className="w-6 h-6" />}
+                trend={{ value: "0.6%", isPositive: false }}
+                color="yellow"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Engagement Overview */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Engagement Overview</h3>
+                <div className="space-y-5">
+                  {/* DAU/MAU */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-gray-500" />
+                      <span className="text-gray-700">DAU/MAU</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-40 bg-gray-200 rounded-full h-2">
+                        <div className="bg-blue-500 h-2 rounded-full" style={{ width: '27%' }} />
+                      </div>
+                      <span className="font-semibold text-blue-600">27%</span>
+                    </div>
+                  </div>
+
+                  {/* 7-day retention */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-gray-500" />
+                      <span className="text-gray-700">7-day Retention</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-40 bg-gray-200 rounded-full h-2">
+                        <div className="bg-green-500 h-2 rounded-full" style={{ width: '54%' }} />
+                      </div>
+                      <span className="font-semibold text-green-600">54%</span>
+                    </div>
+                  </div>
+
+                  {/* Avg session duration */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-gray-500" />
+                      <span className="text-gray-700">Avg Session Duration</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-40 bg-gray-200 rounded-full h-2">
+                        <div className="bg-purple-500 h-2 rounded-full" style={{ width: '68%' }} />
+                      </div>
+                      <span className="font-semibold text-purple-600">6m 42s</span>
+                    </div>
+                  </div>
+
+                  {/* Feature adoption */}
+                  <div className="pt-2">
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">Feature Adoption</h4>
+                    <div className="space-y-3">
+                      {[
+                        { label: 'Complaints', pct: 72, color: 'bg-blue-500', txt: 'text-blue-600' },
+                        { label: 'Vehicle Tracking', pct: 64, color: 'bg-green-500', txt: 'text-green-600' },
+                        { label: 'Training', pct: 41, color: 'bg-yellow-500', txt: 'text-yellow-600' },
+                        { label: 'Store (Utilities)', pct: 29, color: 'bg-purple-500', txt: 'text-purple-600' }
+                      ].map((f, i) => (
+                        <div key={i} className="flex justify-between items-center">
+                          <span className="text-gray-600">{f.label}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-32 bg-gray-200 rounded-full h-2">
+                              <div className={`${f.color} h-2 rounded-full`} style={{ width: `${f.pct}%` }} />
+                            </div>
+                            <span className={`font-semibold ${f.txt}`}>{f.pct}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* User Segments & Geography */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Segments & Geography</h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Segments */}
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">User Segments</h4>
+                    <div className="space-y-3">
+                      {[
+                        { name: 'Citizens', count: '92,410', share: 72, color: 'bg-blue-500', txt: 'text-blue-600' },
+                        { name: 'Green Champions', count: '8,965', share: 7, color: 'bg-green-500', txt: 'text-green-600' },
+                        { name: 'Waste Workers', count: '17,120', share: 13, color: 'bg-yellow-500', txt: 'text-yellow-600' },
+                        { name: 'ULB Admins', count: '10,445', share: 8, color: 'bg-purple-500', txt: 'text-purple-600' }
+                      ].map((s, i) => (
+                        <div key={i} className="p-4 border border-gray-200 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <h5 className="font-medium text-gray-900">{s.name}</h5>
+                            <span className="text-sm text-gray-600">{s.count}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="w-32 bg-gray-200 rounded-full h-2">
+                              <div className={`${s.color} h-2 rounded-full`} style={{ width: `${s.share}%` }} />
+                            </div>
+                            <span className={`text-sm font-semibold ${s.txt}`}>{s.share}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Top Locations */}
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">Top Cities</h4>
+                    <div className="space-y-3">
+                      {[
+                        { city: 'Bengaluru', users: '38,120', growth: '+5.4%' },
+                        { city: 'Hyderabad', users: '24,890', growth: '+7.1%' },
+                        { city: 'Pune', users: '19,440', growth: '+3.2%' },
+                        { city: 'Delhi NCR', users: '16,980', growth: '+4.6%' },
+                        { city: 'Chennai', users: '13,510', growth: '+2.4%' }
+                      ].map((c, i) => (
+                        <div key={i} className="p-4 border border-gray-200 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-gray-500" />
+                              <span className="font-medium text-gray-900">{c.city}</span>
+                            </div>
+                            <span className="text-sm text-gray-600">{c.users}</span>
+                          </div>
+                          <div className="mt-2">
+                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                              {c.growth} last 30d
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Signups */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Recent Signups</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-gray-600">
+                      <th className="py-2 pr-6">Name</th>
+                      <th className="py-2 pr-6">Email</th>
+                      <th className="py-2 pr-6">Role</th>
+                      <th className="py-2 pr-6">City</th>
+                      <th className="py-2">Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-900">
+                    {[
+                      { name: 'Aarav Gupta', email: 'aarav.g@example.com', role: 'Citizen', city: 'Bengaluru', joined: 'Sep 28, 2025' },
+                      { name: 'Neha Sharma', email: 'neha.s@example.com', role: 'Green Champion', city: 'Hyderabad', joined: 'Sep 28, 2025' },
+                      { name: 'Rohit Mehta', email: 'rohit.m@example.com', role: 'Waste Worker', city: 'Pune', joined: 'Sep 27, 2025' },
+                      { name: 'Isha Rao', email: 'isha.r@example.com', role: 'ULB Admin', city: 'Delhi NCR', joined: 'Sep 27, 2025' },
+                      { name: 'Kabir Jain', email: 'kabir.j@example.com', role: 'Citizen', city: 'Chennai', joined: 'Sep 27, 2025' }
+                    ].map((u, i) => (
+                      <tr key={i} className="border-t border-gray-100">
+                        <td className="py-3 pr-6 font-medium">{u.name}</td>
+                        <td className="py-3 pr-6 text-gray-700">{u.email}</td>
+                        <td className="py-3 pr-6">
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                            <Star className="w-3 h-3 text-gray-500" />
+                            {u.role}
+                          </span>
+                        </td>
+                        <td className="py-3 pr-6">{u.city}</td>
+                        <td className="py-3">{u.joined}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
+
 
       default:
         return (

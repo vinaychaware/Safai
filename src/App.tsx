@@ -15,22 +15,36 @@ export interface User {
   name: string;
 }
 
+const LS_KEY = 'currentUser';
+
+const roleToName = (role: UserRole) =>
+  role.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+
 function App() {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  // Rehydrate from localStorage on first render
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      return raw ? (JSON.parse(raw) as User) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const handleLogin = (role: UserRole, email: string) => {
-    // Mock user data - in real app this would come from authentication
     const user: User = {
       id: `${role}-${Date.now()}`,
       email,
       role,
-      name: role.charAt(0).toUpperCase() + role.slice(1).replace('-', ' ')
+      name: roleToName(role),
     };
     setCurrentUser(user);
+    localStorage.setItem(LS_KEY, JSON.stringify(user));
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
+    localStorage.removeItem(LS_KEY);
   };
 
   if (!currentUser) {
@@ -50,6 +64,8 @@ function App() {
       case 'citizen':
         return <CitizenDashboard user={currentUser} onLogout={handleLogout} />;
       default:
+        // Fallback safety: clear bad state and show login
+        localStorage.removeItem(LS_KEY);
         return <LoginPage onLogin={handleLogin} />;
     }
   };

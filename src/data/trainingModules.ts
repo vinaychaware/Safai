@@ -74,7 +74,8 @@ export const TRAINING_MODULES: Record<string, TrainingModule[]> = {
           correctAnswer: false,
           context: 'Grease and food residue contaminate the recycling process.',
           points: 10,
-          explanation: 'Greasy pizza boxes should go in organic waste or general waste, not recycling.'
+          explanation: 'Greasy pizza boxes should go in organic waste or general waste, not recycling.',
+          question: ""
         }
       ]
     },
@@ -106,7 +107,8 @@ export const TRAINING_MODULES: Record<string, TrainingModule[]> = {
           sentence: 'The three R\'s of waste management are ___, ___, and ___.',
           correctAnswers: [['reduce'], ['reuse'], ['recycle']],
           hints: ['Reduce', 'Reuse', 'Recycle'],
-          points: 15
+          points: 15,
+          question: ""
         }
       ]
     },
@@ -298,7 +300,8 @@ export const TRAINING_MODULES: Record<string, TrainingModule[]> = {
           sentence: 'One ton of recycled paper saves approximately ___ trees and ___ gallons of water.',
           correctAnswers: [['17'], ['7000', '7,000']],
           hints: ['17', '7000'],
-          points: 20
+          points: 20,
+          question: ""
         }
       ]
     }
