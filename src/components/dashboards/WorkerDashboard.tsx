@@ -9,11 +9,19 @@ import {
   Users,
   BarChart3,
   CheckCircle,
-  Clock
+  Clock,
+  Navigation,
+  Mic,
+  CreditCard,
+  AlertTriangle,
+  Star,
+  Target,
+  Zap
 } from 'lucide-react';
 import { User } from '../../App';
 import Layout from '../common/Layout';
 import StatCard from '../common/StatCard';
+import TrainingSystem from '../training/TrainingSystem';
 
 interface WorkerDashboardProps {
   user: User;
@@ -26,9 +34,11 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
   const sidebarItems = [
     { icon: <ClipboardList className="w-5 h-5" />, label: 'My Tasks', active: activeTab === 'tasks', onClick: () => setActiveTab('tasks') },
     { icon: <Camera className="w-5 h-5" />, label: 'Submit Proof', active: activeTab === 'proof', onClick: () => setActiveTab('proof') },
+    { icon: <CheckCircle className="w-5 h-5" />, label: 'Attendance', active: activeTab === 'attendance', onClick: () => setActiveTab('attendance') },
     { icon: <Truck className="w-5 h-5" />, label: 'Vehicle Tracking', active: activeTab === 'tracking', onClick: () => setActiveTab('tracking') },
     { icon: <MapPin className="w-5 h-5" />, label: 'Route Map', active: activeTab === 'routes', onClick: () => setActiveTab('routes') },
     { icon: <Award className="w-5 h-5" />, label: 'Incentives', active: activeTab === 'incentives', onClick: () => setActiveTab('incentives') },
+    { icon: <AlertTriangle className="w-5 h-5" />, label: 'Penalties', active: activeTab === 'penalties', onClick: () => setActiveTab('penalties') },
     { icon: <GraduationCap className="w-5 h-5" />, label: 'Training', active: activeTab === 'training', onClick: () => setActiveTab('training') },
     { icon: <Users className="w-5 h-5" />, label: 'Community', active: activeTab === 'community', onClick: () => setActiveTab('community') }
   ];
@@ -179,9 +189,15 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                   <Camera className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">Take Photo</h4>
                   <p className="text-gray-600 mb-4">Capture a geo-tagged photo of the completed work</p>
-                  <button className="bg-green-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-600 transition-colors">
+                  <div className="flex gap-3 justify-center">
+                    <button className="bg-green-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-600 transition-colors">
                     Open Camera
                   </button>
+                    <button className="bg-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors flex items-center gap-2">
+                      <Mic className="w-5 h-5" />
+                      Voice Note
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -213,6 +229,207 @@ const WorkerDashboard: React.FC<WorkerDashboardProps> = ({ user, onLogout }) => 
                   <button className="flex-1 bg-green-500 text-white py-3 rounded-xl font-medium hover:bg-green-600 transition-colors">
                     Submit Completion
                   </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'training':
+        return <TrainingSystem user={user} />;
+
+      case 'attendance':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Attendance & Check-in</h2>
+              <p className="text-gray-600">Manage your daily attendance with facial recognition</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Days Present"
+                value="22"
+                icon={<CheckCircle className="w-6 h-6" />}
+                trend={{ value: "2", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="This Month"
+                value="95%"
+                icon={<Target className="w-6 h-6" />}
+                trend={{ value: "5%", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="On-time Rate"
+                value="98%"
+                icon={<Clock className="w-6 h-6" />}
+                trend={{ value: "3%", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Overtime Hours"
+                value="12"
+                icon={<Zap className="w-6 h-6" />}
+                color="yellow"
+              />
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Today's Check-in</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="text-center">
+                  <div className="w-48 h-48 bg-gray-100 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                    <Camera className="w-16 h-16 text-gray-400" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">Facial Recognition Check-in</h4>
+                  <p className="text-gray-600 mb-4">Position your face in the camera frame</p>
+                  <button className="bg-green-500 text-white px-8 py-3 rounded-xl font-medium hover:bg-green-600 transition-colors">
+                    Start Check-in
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <h5 className="font-semibold text-gray-900 mb-3">Today's Status</h5>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Check-in Time:</span>
+                        <span className="font-medium text-green-600">08:00 AM</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Location:</span>
+                        <span className="font-medium">Zone A Office</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Status:</span>
+                        <span className="font-medium text-green-600">On Time</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 rounded-xl p-4">
+                    <h5 className="font-semibold text-gray-900 mb-3">Digital ID Card</h5>
+                    <div className="bg-white rounded-lg p-4 border">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                          <Users className="w-6 h-6 text-gray-600" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">{user.name}</p>
+                          <p className="text-sm text-gray-600">Worker ID: W{user.id.slice(-4)}</p>
+                        </div>
+                      </div>
+                      <div className="mt-3 text-center">
+                        <div className="w-16 h-16 bg-gray-100 rounded mx-auto flex items-center justify-center">
+                          <span className="text-xs">QR Code</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'incentives':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Incentives & Rewards</h2>
+              <p className="text-gray-600">Track your performance rewards and incentives</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Earned"
+                value="₹2,450"
+                icon={<Award className="w-6 h-6" />}
+                trend={{ value: "₹350", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="This Month"
+                value="₹850"
+                icon={<Star className="w-6 h-6" />}
+                trend={{ value: "₹150", isPositive: true }}
+                color="blue"
+              />
+              <StatCard
+                title="Performance Score"
+                value="92%"
+                icon={<Target className="w-6 h-6" />}
+                trend={{ value: "5%", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Available Coupons"
+                value="5"
+                icon={<CreditCard className="w-6 h-6" />}
+                color="yellow"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Available Rewards</h3>
+                <div className="space-y-4">
+                  {[
+                    { name: 'Fuel Voucher', value: '₹200', requirement: '95% attendance', available: true },
+                    { name: 'Grocery Coupon', value: '₹500', requirement: '100 tasks completed', available: true },
+                    { name: 'Performance Bonus', value: '₹1000', requirement: '98% quality score', available: false },
+                    { name: 'Training Certificate', value: 'Certificate', requirement: 'Complete all modules', available: true }
+                  ].map((reward, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                      <div>
+                        <h4 className="font-medium text-gray-900">{reward.name}</h4>
+                        <p className="text-sm text-gray-600">{reward.requirement}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-green-600">{reward.value}</p>
+                        <button 
+                          className={`mt-1 px-3 py-1 text-xs font-medium rounded-full ${
+                            reward.available 
+                              ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          }`}
+                          disabled={!reward.available}
+                        >
+                          {reward.available ? 'Claim' : 'Locked'}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Leaderboard</h3>
+                <div className="space-y-4">
+                  {[
+                    { rank: 1, name: 'Sarah Worker', score: '98%', badge: '🥇' },
+                    { rank: 2, name: 'Mike Collector', score: '96%', badge: '🥈' },
+                    { rank: 3, name: 'You', score: '92%', badge: '🥉', isUser: true },
+                    { rank: 4, name: 'John Cleaner', score: '89%', badge: '4️⃣' }
+                  ].map((worker, index) => (
+                    <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${
+                      worker.isUser ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{worker.badge}</span>
+                        <div>
+                          <p className={`font-medium ${worker.isUser ? 'text-green-900' : 'text-gray-900'}`}>
+                            {worker.name}
+                          </p>
+                          <p className="text-sm text-gray-600">Rank #{worker.rank}</p>
+                        </div>
+                      </div>
+                      <span className="font-semibold text-blue-600">{worker.score}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

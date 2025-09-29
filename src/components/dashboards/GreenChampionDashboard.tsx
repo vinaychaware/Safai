@@ -7,11 +7,17 @@ import {
   Users, 
   ClipboardList,
   GraduationCap,
-  BarChart3
+  BarChart3,
+  Target,
+  Zap,
+  TrendingUp,
+  CheckCircle,
+  Camera
 } from 'lucide-react';
 import { User } from '../../App';
 import Layout from '../common/Layout';
 import StatCard from '../common/StatCard';
+import TrainingSystem from '../training/TrainingSystem';
 
 interface GreenChampionDashboardProps {
   user: User;
@@ -25,6 +31,7 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
     { icon: <BarChart3 className="w-5 h-5" />, label: 'Dashboard', active: activeTab === 'dashboard', onClick: () => setActiveTab('dashboard') },
     { icon: <Award className="w-5 h-5" />, label: 'Green Points', active: activeTab === 'points', onClick: () => setActiveTab('points') },
     { icon: <ClipboardList className="w-5 h-5" />, label: 'Report Issues', active: activeTab === 'report', onClick: () => setActiveTab('report') },
+    { icon: <CheckCircle className="w-5 h-5" />, label: 'Verify Work', active: activeTab === 'verify', onClick: () => setActiveTab('verify') },
     { icon: <Trophy className="w-5 h-5" />, label: 'Leaderboard', active: activeTab === 'leaderboard', onClick: () => setActiveTab('leaderboard') },
     { icon: <MapPin className="w-5 h-5" />, label: 'Heat Maps', active: activeTab === 'heatmaps', onClick: () => setActiveTab('heatmaps') },
     { icon: <GraduationCap className="w-5 h-5" />, label: 'Training', active: activeTab === 'training', onClick: () => setActiveTab('training') },
@@ -177,6 +184,130 @@ const GreenChampionDashboard: React.FC<GreenChampionDashboardProps> = ({ user, o
                         <p className="text-sm text-gray-500">{item.date}</p>
                       </div>
                       <span className="font-semibold text-green-600">{item.earned}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'training':
+        return <TrainingSystem user={user} />;
+
+      case 'verify':
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Verify Worker Completion</h2>
+              <p className="text-gray-600">Review and verify completed work by workers in your area</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                title="Pending Verifications"
+                value="12"
+                icon={<CheckCircle className="w-6 h-6" />}
+                color="yellow"
+              />
+              <StatCard
+                title="Verified Today"
+                value="8"
+                icon={<Award className="w-6 h-6" />}
+                trend={{ value: "3", isPositive: true }}
+                color="green"
+              />
+              <StatCard
+                title="Points Earned"
+                value="200"
+                icon={<Star className="w-6 h-6" />}
+                trend={{ value: "50", isPositive: true }}
+                color="purple"
+              />
+              <StatCard
+                title="Verification Rate"
+                value="95%"
+                icon={<TrendingUp className="w-6 h-6" />}
+                trend={{ value: "2%", isPositive: true }}
+                color="blue"
+              />
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Work Submissions for Verification</h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-6">
+                  {[
+                    {
+                      id: 'W001',
+                      worker: 'John Worker',
+                      task: 'Cleaned overflowing bin at MG Road',
+                      location: 'MG Road, Sector 15',
+                      submittedAt: '2 hours ago',
+                      points: 25,
+                      hasPhoto: true
+                    },
+                    {
+                      id: 'W002',
+                      worker: 'Sarah Cleaner',
+                      task: 'Removed illegal dumping',
+                      location: 'Park Street, Area 12',
+                      submittedAt: '4 hours ago',
+                      points: 50,
+                      hasPhoto: true
+                    },
+                    {
+                      id: 'W003',
+                      worker: 'Mike Collector',
+                      task: 'Regular waste collection',
+                      location: 'Residential Complex A',
+                      submittedAt: '6 hours ago',
+                      points: 15,
+                      hasPhoto: true
+                    }
+                  ].map((submission, index) => (
+                    <div key={index} className="border border-gray-200 rounded-xl p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="font-semibold text-gray-900">{submission.id}</span>
+                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                              {submission.points} points
+                            </span>
+                          </div>
+                          <h4 className="text-lg font-medium text-gray-900 mb-1">{submission.task}</h4>
+                          <p className="text-gray-600 mb-2">Worker: {submission.worker}</p>
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-4 h-4" />
+                              {submission.location}
+                            </span>
+                            <span>Submitted {submission.submittedAt}</span>
+                          </div>
+                        </div>
+                        {submission.hasPhoto && (
+                          <div className="ml-4">
+                            <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center">
+                              <Camera className="w-8 h-8 text-gray-400" />
+                            </div>
+                            <p className="text-xs text-gray-500 text-center mt-1">Geo-tagged photo</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex gap-3">
+                        <button className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                          ✓ Verify & Approve
+                        </button>
+                        <button className="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-600 transition-colors">
+                          ✗ Reject
+                        </button>
+                        <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+                          View Details
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
