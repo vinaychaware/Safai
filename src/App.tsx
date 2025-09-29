@@ -5,6 +5,7 @@ import AdminDashboard from './components/dashboards/AdminDashboard';
 import GreenChampionDashboard from './components/dashboards/GreenChampionDashboard';
 import WorkerDashboard from './components/dashboards/WorkerDashboard';
 import CitizenDashboard from './components/dashboards/CitizenDashboard';
+// import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export type UserRole = 'superadmin' | 'admin' | 'green-champion' | 'worker' | 'citizen';
 
